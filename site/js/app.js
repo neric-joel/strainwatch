@@ -954,6 +954,21 @@ function zoomClasses() {
   k.toggle('z-far', z < 7.3); k.toggle('z-mid', z >= 5.6 && z < 7.3); k.toggle('z-state', z >= 2.8 && z < 7.3); k.toggle('z-statename', z >= 4.6 && z < 7.3);
 }
 
+// At mid zoom every place shows a name tag. Keep the fastest-sinking ones and hide any tag that would sit on top of
+// another; a hidden tag still opens on hover.
+function declutter() {
+  if (!map || !map.getContainer().classList.contains('z-mid')) return;
+  siteMarks.forEach(({ d }) => d.classList.remove('hid'));
+  const rank = (m) => (m.s.tier === 'checked' ? -1e4 : (m.s.summary && m.s.summary.fast_mmyr) || 0);
+  const kept = [];
+  for (const { d } of [...siteMarks].sort((a, b) => rank(a) - rank(b))) {
+    const r = d.querySelector('span').getBoundingClientRect();
+    if (!r.width) continue;
+    if (kept.some((k) => r.left < k.right + 4 && r.right > k.left - 4 && r.top < k.bottom + 3 && r.bottom > k.top - 3)) d.classList.add('hid');
+    else kept.push(r);
+  }
+}
+
 // One low-key rate layer per place, loaded only when that place is on screen and you are close enough to see it.
 // With more than a hundred places, loading them all at the start would cost about 50 MB.
 function syncOverview() {
@@ -1242,6 +1257,7 @@ async function boot() {
   buildSiteMarks();
   buildStates();
   map.on('zoom', zoomClasses); zoomClasses();
+  map.on('moveend', declutter);
   map.on('moveend', () => { syncOverview(); autoSite(); });
   document.querySelectorAll('#baseSeg button').forEach((b) => (b.onclick = () => setBase(b.dataset.base)));
   await buildStory();

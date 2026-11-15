@@ -232,6 +232,7 @@ body.story .sitemark:hover span { display: block !important; }
 .sitemark.down span { top: 12px; }
 .sitemark span b { display: block; font: 700 12.5px/1.2 var(--serif); color: var(--ink); }
 .z-mid .sitemark span, .sitemark:hover span { display: block; }
+.z-mid .sitemark.hid:not(:hover) span { display: none; }
 .sitemark:hover { z-index: 5; }
 .dotkey { display: inline-block; width: 11px; height: 11px; border-radius: 2.5px; background: var(--ink); border: 1.5px solid rgba(60,58,52,.55); flex: none; }
 .dotkey.t-checked { background: var(--teal); } .dotkey.t-frontier { background: #8f7fb0; }
