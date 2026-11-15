@@ -486,7 +486,7 @@ function renderList() {
   const fsum = summarize(c.segs.filter((s) => S.filter.groups.has(s.g)));
   const weak = isWeak(c.site);
   p.innerHTML = `<h2>${weak ? 'Nothing stands out here' : `${f0(fsum.n)} pieces of line, ranked`}</h2>
-    <p class="lede">${esc(c.site.name)}: ${esc(roleLabel(c.site).replace(/^M/, 'm'))}. ${weak ? `The ground here sinks slowly and evenly as far as the radar can tell, so the ${f0(fsum.n)} pieces below are in order but <b>none is flagged</b>. Treat it as a clean bill for now, not a work list.` : `Each piece is about 300 m, in order of how unevenly the ground beneath it is sinking (not how fast). <b>${S.role ? ROLES.find((r) => r.id === S.role).who + ': ' : ''}${f0(fsum.first.km)} km to look at first, out of ${f0(fsum.km)} km${S.filter.groups.size < groups.length ? ' of your lines' : ''}.</b>`}</p>
+    <p class="lede">${esc(c.site.name)}: ${esc(roleLabel(c.site).replace(/^M/, 'm'))}. ${weak ? `On the ground the radar could read, sinking here is slow and even, so the ${f0(fsum.n)} pieces below are in order but <b>none is flagged</b>. That is no strong signal, not a clean bill: ${f0(fsum.nodata.km)} of ${f0(fsum.km)} km could not be observed, and nothing here has been checked on the ground.` : `Each piece is about 300 m, in order of how unevenly the ground beneath it is sinking (not how fast). <b>${S.role ? ROLES.find((r) => r.id === S.role).who + ': ' : ''}${f0(fsum.first.km)} km to look at first, out of ${f0(fsum.km)} km${S.filter.groups.size < groups.length ? ' of your lines' : ''}.</b>`}</p>
     ${siteCaveat(c)}
     <div class="kicker" style="margin-top:4px">I look after</div>
     <div class="chips" id="rchips">${ROLES.map((r) => `<button data-role="${r.id}" aria-pressed="${S.role === r.id}" title="${r.q}">${r.id === 'roads' ? 'Roads' : r.id === 'lines' ? 'Pipelines, canals, rail, power' : 'Fissure mapping'}</button>`).join('')}</div>
@@ -664,7 +664,8 @@ function showPlan(animate) {
     if (!live()) return;
     if (!plan.stops.length) { out.innerHTML = '<div class="empty">No pieces qualify with these choices.</div>'; setRoute(null); return; }
     setRoute(plan);
-    out.innerHTML = `<div class="kicker teal">The route · ${plan.stops.length} stops</div>` + plan.stops.map((st) => `<button class="row" data-o="${st.order}"><span class="rk">${st.order}</span><span><span class="nm">${esc(st.names.slice(0, 2).join(', '))}</span><span class="sb">${st.segs.length} piece${st.segs.length > 1 ? 's' : ''} · ${st.km.toFixed(1)} km to check</span></span><span class="vd c-${st.top.cls}">${f1(st.top.uneven)} <small>mm/yr per km</small><small>${fmtRate(st.top.rate)}</small></span></button>`).join('')
+    const wk = isWeak(S.cur.site);
+    out.innerHTML = (wk ? '<div class="meta warn" style="margin-bottom:8px"><b>Weak signal here: none of these is flagged.</b> They are the highest-ranked pieces at this place, in order, and even they are barely uneven. Use the list only if a crew is going anyway.</div>' : '') + `<div class="kicker teal">${wk ? 'Highest-ranked here' : 'The route'} · ${plan.stops.length} stops</div>` +plan.stops.map((st) => `<button class="row" data-o="${st.order}"><span class="rk">${st.order}</span><span><span class="nm">${esc(st.names.slice(0, 2).join(', '))}</span><span class="sb">${st.segs.length} piece${st.segs.length > 1 ? 's' : ''} · ${st.km.toFixed(1)} km to check</span></span><span class="vd c-${st.top.cls}">${f1(st.top.uneven)} <small>mm/yr per km</small><small>${fmtRate(st.top.rate)}</small></span></button>`).join('')
       + (S.cur.fis ? (() => { const k = plan.stops.filter((st) => st.top.fisDist <= 500).length, m = plan.stops.filter((st) => !(st.top.fisDist <= 2000)).length; return `<div class="meta" style="margin-top:8px"><b style="color:var(--ink)">Beside the known-fissure map:</b> ${k} of these ${plan.stops.length} stops lie within 500 m of a fissure the state has already mapped; ${m} have none within 2 km. Known fissures were the best single guide in our test. What the radar adds is the stops that map would not send anyone to.</div>`; })() : '')
       + '<div class="btnrow"><button class="btn teal" id="ppkg">Print the stop sheets</button><button class="btn ghost" id="pcsv">CSV</button><button class="btn ghost" id="pgeo">GeoJSON</button></div><p class="fine" style="font-size:11.5px;color:var(--muted);margin-top:8px">Distances are straight lines between stops. Check the list against local knowledge before sending a crew.</p>';
     out.querySelectorAll('.row').forEach((b) => (b.onclick = () => select(plan.stops[+b.dataset.o - 1].top)));
@@ -794,7 +795,7 @@ function noFrameMsg(p) {
   const americas = p[0] > -170 && p[0] < -50 && p[1] > 5 && p[1] < 72;
   return americas
     ? '<b>No data here yet. That does not mean it is safe.</b> NASA publishes the radar history for North and Central America, so this ground can be added the same way as the others. Until then it is simply not measured.'
-    : '<b>No data here yet. That does not mean it is safe.</b> Outside North and Central America there is no ready-made radar history; StrainWatch has only the newer NISAR satellite, whose record is about a year old. The Chennai panel shows what that allows today.';
+    : '<b>No data here yet. That does not mean it is safe.</b> The NASA OPERA history this app starts from covers North and Central America only; elsewhere StrainWatch has only the newer NISAR satellite, whose record is about a year old. The Chennai panel shows what that allows today.';
 }
 
 // ---- ground truth, per place: validated in depth / GPS agrees / GPS weak / nothing to check against
@@ -903,7 +904,7 @@ function nisarCard(c) {
 function buildSiteMarks() {
   S.sites.forEach((s, i) => {
     const pos = { phoenix_west: 'left up', phoenix_east: 'up', pinal: 'left down', willcox: 'down', mexico: 'left' }[s.id] ?? ['', 'left', 'up', 'left down'][i % 4];
-    const dot = s.frontier ? 12 : Math.round(Math.max(9, Math.min(20, 6 + 1.4 * Math.sqrt(-s.summary.fast_mmyr)))); // bigger dot = faster sinking
+    const dot = s.frontier ? 10 : Math.round(Math.max(9, Math.min(13, 8 + 0.45 * Math.sqrt(-s.summary.fast_mmyr)))); // slightly bigger = faster sinking, never large
     const d = el('div', { class: `sitemark t-${s.tier} ${pos}` }, `<i style="width:${dot}px;height:${dot}px"></i><span></span>`);
     d.onclick = (e) => { e.stopPropagation(); if (S.mode === 'story') enterExplore(s.id); else setSite(s.id); };
     siteMarks.push({ s, d, m: new maplibregl.Marker({ element: d, anchor: 'center' }).setLngLat(s.center).addTo(map) });
@@ -1073,7 +1074,7 @@ function renderWorld() {
     <div id="wrows" class="scrollbox"></div>
     ${exposureCard()}
     <div class="card nisar" style="margin-top:6px"><h3>What NISAR does here</h3>
-      <p>The ten-year history is Sentinel-1. <b>NISAR</b>, the NASA-ISRO L-band radar flying since 2025, has two jobs: it <b>can carry the watch forward</b> once the Sentinel-1 record ends (shown here on one year of data, not yet a live service), and it is <b>the only source in most of the world</b>. Its strongest result here: at Mexico City one year of NISAR matches ten years of Sentinel-1 at r = 0.94, and reads −279 mm/yr where GPS says −262 to −268.</p>
+      <p>The ten-year history is Sentinel-1. <b>NISAR</b>, the NASA-ISRO L-band radar flying since 2025, has two jobs: it <b>can carry the watch forward</b> once the Sentinel-1 record ends (shown here on one year of data, not yet a live service), and it is <b>the only source this app has outside North and Central America</b>, where the OPERA history stops. Its strongest result here: at Mexico City one year of NISAR matches ten years of Sentinel-1 at r = 0.94, and reads −279 mm/yr where GPS says −262 to −268.</p>
       <p>${nisarSummary()}</p><p>NISAR pairs from the past year are stacked at <b>${S.sites.length - nc('none') - nc('frontier')} places</b>, plus Chennai. Of the ${nc('strong') + nc('moderate') + nc('weak')} that move enough to compare, NISAR agrees with Sentinel-1 at ${nc('strong')}, loosely at ${nc('moderate')}, not yet at ${nc('weak')}; at ${nc('quiet')} the ground is too quiet to tell${nc('none') ? `, and ${nc('none')} are not processed yet` : ''}. <button class="linkbtn" id="seeNisar">Colour the markers by NISAR agreement</button></p></div>
     <div class="card" style="margin-top:14px"><h3>Everywhere else</h3>
       <p><b>North and Central America.</b> NASA's OPERA project publishes the Sentinel-1 displacement history used here. Any window can be packed with one script in a few minutes; every place outside the three checked in depth was added that way, then compared with GPS.</p>

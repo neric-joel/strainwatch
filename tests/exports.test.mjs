@@ -32,6 +32,18 @@ test('GeoJSON: valid features with the same fields, readable back by linesFromGe
   assert.equal(back[0].name, 'Road "0", north');
 });
 
+test('exports at a weak-signal place never say "Inspect first"', () => {
+  const weak = { ...site, uneven_q: Array.from({ length: 201 }, (_, i) => i / 50) }; // top 5% starts at 3.8 mm/yr per km
+  const csv = toCSV([seg(0), seg(1, { cls: 'watch' })], weak);
+  const lines = csv.trim().split('\n');
+  assert.ok(lines[2].startsWith('# Weak signal'), lines[2]);
+  assert.ok(!csv.includes('Inspect first') && lines[4].includes('Highest here (weak signal)'));
+  const gj = JSON.parse(toGeoJSON([seg(0)], weak));
+  assert.equal(gj.features[0].properties.verdict, 'Highest here (weak signal)');
+  assert.ok(gj.description.includes('Weak signal'));
+  assert.ok(!toCSV([seg(0)], { ...site, uneven_q: Array.from({ length: 201 }, (_, i) => i) }).includes('Weak signal'));
+});
+
 test('linesFromGeoJSON survives junk without throwing', () => {
   for (const junk of [null, 42, 'text', [], {}, { type: 'FeatureCollection', features: [] }, { type: 'Feature', geometry: null, properties: null },
     { type: 'Feature', properties: {}, geometry: { type: 'LineString', coordinates: [[1, 2]] } }, { type: 'Feature', properties: {}, geometry: { type: 'LineString', coordinates: [['a', 'b'], [1, 2]] } },

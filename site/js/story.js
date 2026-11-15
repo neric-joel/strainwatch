@@ -154,7 +154,7 @@ export function buildSteps(ctx) {
       title: 'Chennai: the honest answer is "not yet"',
       view: { site: 'chennai', center: [80.2, 13.07], zoom: 11.1, layer: 't149', points: 'chennai',
         callouts: [{ at: [80.248, 13.137], title: 'Kodungaiyur', sub: 'A candidate, not a finding. The ring around it reads the same.', side: 'left' }] },
-      body: `<p>Outside North and Central America there is no ready-made radar history to start from. In Chennai StrainWatch has <b>${ch.noise[0].months.toFixed(1)} months</b> of NISAR. The measured noise floor is about ${ch.noise[0].sigma_cum.toFixed(0)} mm, so the slowest sinking we could detect today is about <b>${ch.noise[0].mdr_now.toFixed(0)} mm a year</b>.</p>
+      body: `<p>The NASA OPERA history this app starts from covers North and Central America only. In Chennai StrainWatch has <b>${ch.noise[0].months.toFixed(1)} months</b> of NISAR. The measured noise floor is about ${ch.noise[0].sigma_cum.toFixed(0)} mm, so the slowest sinking we could detect today is about <b>${ch.noise[0].mdr_now.toFixed(0)} mm a year</b>.</p>
         <p>Published rates for Chennai are 15 to 32 mm a year. So this map is <b>noise, shown as noise</b>.</p>
         <p>How long until it is not? For 30 mm a year: ${rng(mtd(30, 'fixed'))} months if noise stays flat, ${rng(mtd(30, 'random_walk'))} if it adds up. For 15 mm a year: ${rng(mtd(15, 'fixed'))} months at best. StrainWatch reports that clock for any new place.</p>`,
     },

@@ -75,8 +75,12 @@ checks that the packed numbers still match the research tables.
 
 ## Rebuild the data
 
-The build reads cached radar products from `../data/` (not in this repository; the scripts fetch them from NASA's archive
-with an Earthdata login).
+The build reads cached radar products from `../data/` (not in this repository; the scripts below fetch them from NASA's
+archive with an Earthdata login). These scripts rebuild every place, its NISAR stack and its GPS comparison. The in-depth
+research tables for Willcox, Mexico City, Phoenix and Chennai (survey benchmarks against radar, the forward fissure
+test, the Chennai noise figures) come from separate analysis scripts that are not in this repository: `build_data.py`
+reads their output tables and packs them into `site/data/validation.json`, so those headline results cannot be rerun
+from this repository alone.
 
 ```bash
 python build/add_site.py        # fetch OPERA DISP-S1 for the places in build/places.json

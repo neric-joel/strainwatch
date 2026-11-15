@@ -3,6 +3,11 @@ import { CLASS_LABEL } from './score.js';
 
 const r1 = (v) => (Number.isFinite(v) ? Math.round(v * 10) / 10 : '');
 
+// A place where even the top 5% is barely uneven: the order still holds, but nothing is flagged for inspection.
+export const isWeakSite = (site) => !!(site && site.uneven_q && site.uneven_q[190] < 5);
+const WEAK_NOTE = 'Weak signal at this place: even the most uneven 5% is under 5 mm/yr per km, so no piece is flagged for inspection. "Highest here" is a relative order only, and ground the radar could not observe is not known to be stable.';
+export const verdictOf = (s, site) => (s.cls === 'first' && isWeakSite(site) ? 'Highest here (weak signal)' : CLASS_LABEL[s.cls]);
+
 export function download(name, text, type) {
   const a = document.createElement('a');
   a.href = URL.createObjectURL(new Blob([text], { type }));
@@ -12,7 +17,7 @@ export function download(name, text, type) {
 }
 
 const COLS = [
-  ['stop', (s) => s.stop ?? ''], ['rank', (s) => s.rank ?? ''], ['verdict', (s) => CLASS_LABEL[s.cls]], ['name', (s) => s.name], ['also_known_as', (s) => (s.aka || []).join(' / ')],
+  ['stop', (s) => s.stop ?? ''], ['rank', (s) => s.rank ?? ''], ['verdict', (s, site) => verdictOf(s, site)], ['name', (s) => s.name], ['also_known_as', (s) => (s.aka || []).join(' / ')],
   ['type', (s) => s.kind], ['piece', (s) => s.piece], ['length_m', (s) => Math.round(s.len)], ['mid_lon', (s) => s.mid[0].toFixed(5)], ['mid_lat', (s) => s.mid[1].toFixed(5)],
   ['unevenness_mm_yr_per_km', (s) => r1(s.uneven)], ['unevenness_percentile', (s) => r1(s.pct)], ['sinking_rate_mm_yr', (s) => r1(s.rate)],
   ['good_data_share', (s) => s.valid.toFixed(2)], ['nearest_mapped_fissure_m', (s) => (Number.isFinite(s.fisDist) ? Math.round(s.fisDist) : '')],
@@ -20,16 +25,16 @@ const COLS = [
 const q = (v) => (/[",\n]/.test(String(v)) ? '"' + String(v).replace(/"/g, '""') + '"' : v);
 
 export function toCSV(segs, site) {
-  const head = `# StrainWatch ranked list. Site: ${site.name}. Radar: ${site.sensor}, ${site.layers.rate ? site.layers.rate.period : ''}. Rates are ${site.rate_kind}; negative = sinking.\n# Screening index for prioritising inspection. Not a damage assessment and not a forecast. "No data" means not observed, not stable.\n`;
-  return head + COLS.map((c) => c[0]).join(',') + '\n' + segs.map((s) => COLS.map((c) => q(c[1](s))).join(',')).join('\n') + '\n';
+  const head = `# StrainWatch ranked list. Site: ${site.name}. Radar: ${site.sensor}, ${site.layers.rate ? site.layers.rate.period : ''}. Rates are ${site.rate_kind}; negative = sinking.\n# Screening index for prioritising inspection. Not a damage assessment and not a forecast. "No data" means not observed, not stable.\n${isWeakSite(site) ? '# ' + WEAK_NOTE + '\n' : ''}`;
+  return head + COLS.map((c) => c[0]).join(',') + '\n' + segs.map((s) => COLS.map((c) => q(c[1](s, site))).join(',')).join('\n') + '\n';
 }
 
 export function toGeoJSON(segs, site) {
   return JSON.stringify({
     type: 'FeatureCollection',
     name: `StrainWatch ${site.name}`,
-    description: 'Screening index for prioritising inspection. Not a damage assessment and not a forecast. Negative rate = sinking. No data = not observed.',
-    features: segs.map((s) => ({ type: 'Feature', properties: Object.fromEntries(COLS.map((c) => [c[0], c[1](s)])), geometry: { type: 'LineString', coordinates: s.coords.map((p) => [+p[0].toFixed(6), +p[1].toFixed(6)]) } })),
+    description: 'Screening index for prioritising inspection. Not a damage assessment and not a forecast. Negative rate = sinking. No data = not observed.' + (isWeakSite(site) ? ' ' + WEAK_NOTE : ''),
+    features: segs.map((s) => ({ type: 'Feature', properties: Object.fromEntries(COLS.map((c) => [c[0], c[1](s, site)])), geometry: { type: 'LineString', coordinates: s.coords.map((p) => [+p[0].toFixed(6), +p[1].toFixed(6)]) } })),
   });
 }
 
@@ -42,7 +47,7 @@ export function printReport(s, { c, map, fmtRate, fmtUn }) {
   rep.innerHTML = `<div class="rk">StrainWatch inspection sheet · ${esc(site.name)} · printed ${new Date().toISOString().slice(0, 10)}</div>
     <h1>${esc(s.name)}</h1>
     <div>${esc(s.kind)}${s.aka && s.aka.length ? ' · also ' + esc(s.aka.join(', ')) : ''} · piece ${s.piece} of ${s.of} · ${Math.round(s.len)} m · centre ${s.mid[1].toFixed(5)}, ${s.mid[0].toFixed(5)}</div>
-    <div class="verdict"><b>${CLASS_LABEL[s.cls]}</b>${s.rank ? ` · rank ${s.rank}` : ''}${s.cls !== 'nodata' ? ` · unevenness ${fmtUn(s.uneven)} · ${fmtRate(s.rate)}` : ''}</div>
+    <div class="verdict"><b>${verdictOf(s, site)}</b>${s.rank ? ` · rank ${s.rank}` : ''}${s.cls !== 'nodata' ? ` · unevenness ${fmtUn(s.uneven)} · ${fmtRate(s.rate)}` : ''}</div>
     <div class="two"><div>${img ? `<img src="${img}" alt="Map of the piece">` : ''}</div><div>
       <table>
         <tr><td>Unevenness (worst point under the piece)</td><td>${fmtUn(s.uneven)}</td></tr>
@@ -60,7 +65,7 @@ export function printReport(s, { c, map, fmtRate, fmtUn }) {
     <ul><li>Look for: open or hairline cracks crossing the line, offsets, potholes in a row, ponding, tilted poles or fence posts, fresh patching.</li>
     <li>Record what you find, including "nothing". Negative results are what make the next ranking better.</li></ul>
     <div class="fine">Source: ${esc(site.sensor)}, ${site.layers.rate ? esc(site.layers.rate.period) : ''}, referenced to: ${esc(site.reference)}. Unevenness = change in sinking rate per kilometre on a 270 m grid, ranked within the frame.
-    This is a relative screening index for deciding where to look first. It is not a damage assessment, not an engineering finding and not a forecast. Fissures are narrower than a radar pixel. "Not observed" does not mean stable.
+    This is a relative screening index for deciding where to look first. It is not a damage assessment, not an engineering finding and not a forecast. Fissures are narrower than a radar pixel. "Not observed" does not mean stable.${isWeakSite(site) ? ' ' + esc(WEAK_NOTE) : ''}
     Rates assume vertical motion${site.rate_kind === 'line of sight' ? ' (this site is reported along the radar line of sight)' : ''}.</div>`;
   setTimeout(() => window.print(), 60);
 }
@@ -73,7 +78,7 @@ export function printPlan(plan, { c, map, fmtRate, fmtUn }) {
   try { img = map.getCanvas().toDataURL('image/jpeg', 0.85); } catch (e) { img = ''; }
   const fis = (s) => (Number.isFinite(s.fisDist) ? Math.round(s.fisDist) + ' m' : c.fis ? 'none within 2 km' : 'not mapped here');
   rep.innerHTML = `<div class="rk">StrainWatch inspection candidates · ${esc(site.name)} · printed ${new Date().toISOString().slice(0, 10)}</div>
-    <h1>${plan.stops.length} stops to look at first</h1>
+    <h1>${isWeakSite(site) ? `The ${plan.stops.length} highest-ranked stops here (weak signal: none is flagged)` : `${plan.stops.length} stops to look at first`}</h1>
     <div>${esc(site.region)} · ${plan.inspectKm.toFixed(1)} km of line to check · about ${plan.travelKm.toFixed(0)} km between stops in straight lines (not by road)</div>
     ${img ? `<div style="max-width:520px;margin-top:8px"><img src="${img}" alt="Map of the stops"></div>` : ''}
     <h3>Summary</h3>
@@ -84,6 +89,6 @@ export function printPlan(plan, { c, map, fmtRate, fmtUn }) {
       <div>Found on site: ____________________________________________ &nbsp; Nothing found: [ ]</div>`).join('')}
     <div class="fine">Source: ${esc(site.sensor)}, ${site.layers.rate ? esc(site.layers.rate.period) : ''}, referenced to: ${esc(site.reference)}.
     These are candidates for inspection, ranked by how unevenly the ground is sinking on a 270 m grid. They are not findings of damage and not a forecast. The stop order is nearest-neighbour in straight lines.
-    In our one forward test, distance to already-mapped fissures ranked ground slightly better than this score; use both. "Not observed" ground is not on this list and is not known to be stable.</div>`;
+    In our one forward test, distance to already-mapped fissures ranked ground slightly better than this score; use both. "Not observed" ground is not on this list and is not known to be stable.${isWeakSite(site) ? ' ' + esc(WEAK_NOTE) : ''}</div>`;
   setTimeout(() => window.print(), 60);
 }
