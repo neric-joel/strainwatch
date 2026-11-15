@@ -1,0 +1,1899 @@
+{
+ "_note": "Places added with add_site.py. box = [lon_min, lon_max, lat_min, lat_max], inside OPERA DISP-S1 coverage (North and Central America). az = also fetch Arizona Geological Survey fissures. All of these are MEASURED, NOT GROUND-CHECKED.",
+ "pinal": {
+  "name": "Pinal County",
+  "region": "Eloy and Picacho, Arizona",
+  "box": [
+   -111.75,
+   -111.38,
+   32.64,
+   32.98
+  ],
+  "center": [
+   -111.56,
+   32.8
+  ],
+  "zoom": 10.6,
+  "az": true,
+  "st": "AZ"
+ },
+ "sanjoaquin": {
+  "name": "San Joaquin Valley",
+  "region": "Corcoran and Tulare, California",
+  "box": [
+   -119.8,
+   -119.38,
+   35.95,
+   36.32
+  ],
+  "center": [
+   -119.59,
+   36.13
+  ],
+  "zoom": 10.4,
+  "st": "CA"
+ },
+ "houston": {
+  "name": "Houston",
+  "region": "Katy and northwest Harris County, Texas",
+  "box": [
+   -95.85,
+   -95.42,
+   29.74,
+   30.12
+  ],
+  "center": [
+   -95.63,
+   29.93
+  ],
+  "zoom": 10.4,
+  "st": "TX"
+ },
+ "lasvegas": {
+  "name": "Las Vegas",
+  "region": "Las Vegas Valley, Nevada",
+  "box": [
+   -115.34,
+   -115.03,
+   36.06,
+   36.32
+  ],
+  "center": [
+   -115.18,
+   36.19
+  ],
+  "zoom": 10.9,
+  "st": "NV"
+ },
+ "aguascalientes": {
+  "name": "Aguascalientes",
+  "region": "Aguascalientes Valley, Mexico",
+  "box": [
+   -102.4,
+   -102.18,
+   21.76,
+   22.02
+  ],
+  "center": [
+   -102.29,
+   21.89
+  ],
+  "zoom": 11.0,
+  "st": "MX"
+ },
+ "celaya": {
+  "name": "Celaya",
+  "region": "Guanajuato, Mexico",
+  "box": [
+   -100.92,
+   -100.7,
+   20.43,
+   20.62
+  ],
+  "center": [
+   -100.81,
+   20.52
+  ],
+  "zoom": 11.3,
+  "st": "MX"
+ },
+ "elnido": {
+  "name": "Merced and Madera",
+  "region": "El Nido and Chowchilla, California",
+  "box": [
+   -120.55,
+   -120.18,
+   36.92,
+   37.22
+  ],
+  "center": [
+   -120.37,
+   37.07
+  ],
+  "zoom": 10.7,
+  "st": "CA"
+ },
+ "kern": {
+  "name": "Kern County",
+  "region": "Arvin and south Bakersfield, California",
+  "box": [
+   -119.15,
+   -118.78,
+   35.05,
+   35.38
+  ],
+  "center": [
+   -118.96,
+   35.21
+  ],
+  "zoom": 10.6,
+  "st": "CA"
+ },
+ "sacramento": {
+  "name": "Sacramento Valley",
+  "region": "Arbuckle and Colusa County, California",
+  "box": [
+   -122.22,
+   -121.88,
+   38.88,
+   39.18
+  ],
+  "center": [
+   -122.05,
+   39.03
+  ],
+  "zoom": 10.7,
+  "st": "CA"
+ },
+ "coachella": {
+  "name": "Coachella Valley",
+  "region": "Indio and La Quinta, California",
+  "box": [
+   -116.42,
+   -116.12,
+   33.6,
+   33.82
+  ],
+  "center": [
+   -116.27,
+   33.71
+  ],
+  "zoom": 11.0,
+  "st": "CA"
+ },
+ "antelope": {
+  "name": "Antelope Valley",
+  "region": "Lancaster and Edwards, California",
+  "box": [
+   -118.28,
+   -117.92,
+   34.62,
+   34.9
+  ],
+  "center": [
+   -118.1,
+   34.76
+  ],
+  "zoom": 10.8,
+  "st": "CA"
+ },
+ "tucson": {
+  "name": "Tucson and Avra Valley",
+  "region": "Pima County, Arizona",
+  "box": [
+   -111.35,
+   -110.98,
+   32.12,
+   32.42
+  ],
+  "center": [
+   -111.16,
+   32.27
+  ],
+  "zoom": 10.7,
+  "az": true,
+  "st": "AZ"
+ },
+ "mcmullen": {
+  "name": "McMullen Valley",
+  "region": "Wenden and Salome, Arizona",
+  "box": [
+   -113.72,
+   -113.36,
+   33.68,
+   33.95
+  ],
+  "center": [
+   -113.54,
+   33.81
+  ],
+  "zoom": 10.8,
+  "az": true,
+  "st": "AZ"
+ },
+ "sansimon": {
+  "name": "San Simon Valley",
+  "region": "Bowie and San Simon, Arizona",
+  "box": [
+   -109.55,
+   -109.18,
+   32.15,
+   32.45
+  ],
+  "center": [
+   -109.36,
+   32.3
+  ],
+  "zoom": 10.7,
+  "az": true,
+  "st": "AZ"
+ },
+ "cedar": {
+  "name": "Cedar Valley",
+  "region": "Cedar City and Enoch, Utah",
+  "box": [
+   -113.22,
+   -112.96,
+   37.62,
+   37.86
+  ],
+  "center": [
+   -113.09,
+   37.74
+  ],
+  "zoom": 11.0,
+  "st": "UT"
+ },
+ "pecos": {
+  "name": "Pecos",
+  "region": "Reeves and Ward counties, Texas",
+  "box": [
+   -103.62,
+   -103.25,
+   31.3,
+   31.6
+  ],
+  "center": [
+   -103.43,
+   31.45
+  ],
+  "zoom": 10.7,
+  "st": "TX"
+ },
+ "elpaso": {
+  "name": "El Paso",
+  "region": "Hueco Bolson, Texas",
+  "box": [
+   -106.52,
+   -106.22,
+   31.68,
+   31.92
+  ],
+  "center": [
+   -106.37,
+   31.8
+  ],
+  "zoom": 10.9,
+  "st": "TX"
+ },
+ "neworleans": {
+  "name": "New Orleans",
+  "region": "Orleans and Jefferson parishes, Louisiana",
+  "box": [
+   -90.28,
+   -89.92,
+   29.88,
+   30.08
+  ],
+  "center": [
+   -90.1,
+   29.98
+  ],
+  "zoom": 10.9,
+  "st": "LA"
+ },
+ "norfolk": {
+  "name": "Hampton Roads",
+  "region": "Norfolk and Virginia Beach, Virginia",
+  "box": [
+   -76.42,
+   -76.05,
+   36.76,
+   37.02
+  ],
+  "center": [
+   -76.23,
+   36.89
+  ],
+  "zoom": 10.8,
+  "st": "VA"
+ },
+ "dallas": {
+  "name": "Dallas",
+  "region": "Dallas County, Texas",
+  "box": [
+   -96.98,
+   -96.62,
+   32.65,
+   32.95
+  ],
+  "center": [
+   -96.8,
+   32.8
+  ],
+  "zoom": 10.8,
+  "st": "TX"
+ },
+ "denver": {
+  "name": "Denver",
+  "region": "Denver Basin, Colorado",
+  "box": [
+   -105.13,
+   -104.77,
+   39.59,
+   39.89
+  ],
+  "center": [
+   -104.95,
+   39.74
+  ],
+  "zoom": 10.8,
+  "st": "CO"
+ },
+ "omaha": {
+  "name": "Omaha",
+  "region": "Douglas County, Nebraska",
+  "box": [
+   -96.13,
+   -95.77,
+   41.1,
+   41.4
+  ],
+  "center": [
+   -95.95,
+   41.25
+  ],
+  "zoom": 10.8,
+  "st": "NE"
+ },
+ "beryl": {
+  "name": "Escalante Valley",
+  "region": "Beryl and Enterprise, Utah",
+  "box": [
+   -113.84,
+   -113.48,
+   37.63,
+   37.93
+  ],
+  "center": [
+   -113.66,
+   37.78
+  ],
+  "zoom": 10.8,
+  "st": "UT"
+ },
+ "jackson": {
+  "name": "Jackson",
+  "region": "Hinds County, Mississippi",
+  "box": [
+   -90.36,
+   -90.0,
+   32.15,
+   32.45
+  ],
+  "center": [
+   -90.18,
+   32.3
+  ],
+  "zoom": 10.8,
+  "st": "MS"
+ },
+ "detroit": {
+  "name": "Detroit",
+  "region": "Wayne County, Michigan",
+  "box": [
+   -83.28,
+   -82.92,
+   42.2,
+   42.5
+  ],
+  "center": [
+   -83.1,
+   42.35
+  ],
+  "zoom": 10.8,
+  "st": "MI"
+ },
+ "coloradosprings": {
+  "name": "Colorado Springs",
+  "region": "El Paso County, Colorado",
+  "box": [
+   -104.96,
+   -104.6,
+   38.69,
+   38.99
+  ],
+  "center": [
+   -104.78,
+   38.84
+  ],
+  "zoom": 10.8,
+  "st": "CO"
+ },
+ "charlestonsc": {
+  "name": "Charleston",
+  "region": "Charleston Harbor, South Carolina",
+  "box": [
+   -80.14,
+   -79.78,
+   32.67,
+   32.97
+  ],
+  "center": [
+   -79.96,
+   32.82
+  ],
+  "zoom": 10.8,
+  "st": "SC"
+ },
+ "burlington": {
+  "name": "Burlington",
+  "region": "Chittenden County, Vermont",
+  "box": [
+   -73.36,
+   -73.0,
+   44.32,
+   44.62
+  ],
+  "center": [
+   -73.18,
+   44.47
+  ],
+  "zoom": 10.8,
+  "st": "VT"
+ },
+ "spokane": {
+  "name": "Spokane",
+  "region": "Spokane Valley, Washington",
+  "box": [
+   -117.56,
+   -117.2,
+   47.51,
+   47.81
+  ],
+  "center": [
+   -117.38,
+   47.66
+  ],
+  "zoom": 10.8,
+  "st": "WA"
+ },
+ "douglas": {
+  "name": "Douglas Basin",
+  "region": "Elfrida and McNeal, Arizona",
+  "box": [
+   -109.83,
+   -109.47,
+   31.43,
+   31.73
+  ],
+  "center": [
+   -109.65,
+   31.58
+  ],
+  "zoom": 10.8,
+  "st": "AZ",
+  "az": true
+ },
+ "seattle": {
+  "name": "Seattle",
+  "region": "King County, Washington",
+  "box": [
+   -122.48,
+   -122.12,
+   47.43,
+   47.73
+  ],
+  "center": [
+   -122.3,
+   47.58
+  ],
+  "zoom": 10.8,
+  "st": "WA"
+ },
+ "cincinnati": {
+  "name": "Cincinnati",
+  "region": "Hamilton County, Ohio",
+  "box": [
+   -84.7,
+   -84.34,
+   38.97,
+   39.27
+  ],
+  "center": [
+   -84.52,
+   39.12
+  ],
+  "zoom": 10.8,
+  "st": "OH"
+ },
+ "buffalo": {
+  "name": "Buffalo",
+  "region": "Erie County, New York",
+  "box": [
+   -79.03,
+   -78.67,
+   42.74,
+   43.04
+  ],
+  "center": [
+   -78.85,
+   42.89
+  ],
+  "zoom": 10.8,
+  "st": "NY"
+ },
+ "tulsa": {
+  "name": "Tulsa",
+  "region": "Tulsa County, Oklahoma",
+  "box": [
+   -96.15,
+   -95.79,
+   35.99,
+   36.29
+  ],
+  "center": [
+   -95.97,
+   36.14
+  ],
+  "zoom": 10.8,
+  "st": "OK"
+ },
+ "yuma": {
+  "name": "Yuma",
+  "region": "Yuma Valley, Arizona",
+  "box": [
+   -114.78,
+   -114.42,
+   32.53,
+   32.83
+  ],
+  "center": [
+   -114.6,
+   32.68
+  ],
+  "zoom": 10.8,
+  "st": "AZ",
+  "az": true
+ },
+ "atlanta": {
+  "name": "Atlanta",
+  "region": "Fulton County, Georgia",
+  "box": [
+   -84.58,
+   -84.22,
+   33.61,
+   33.91
+  ],
+  "center": [
+   -84.4,
+   33.76
+  ],
+  "zoom": 10.8,
+  "st": "GA"
+ },
+ "lakecharles": {
+  "name": "Lake Charles",
+  "region": "Calcasieu Parish, Louisiana",
+  "box": [
+   -93.4,
+   -93.04,
+   30.07,
+   30.37
+  ],
+  "center": [
+   -93.22,
+   30.22
+  ],
+  "zoom": 10.8,
+  "st": "LA"
+ },
+ "chicago": {
+  "name": "Chicago",
+  "region": "Cook County, Illinois",
+  "box": [
+   -87.88,
+   -87.52,
+   41.7,
+   42.0
+  ],
+  "center": [
+   -87.7,
+   41.85
+  ],
+  "zoom": 10.8,
+  "st": "IL"
+ },
+ "siouxfalls": {
+  "name": "Sioux Falls",
+  "region": "Minnehaha County, South Dakota",
+  "box": [
+   -96.91,
+   -96.55,
+   43.4,
+   43.7
+  ],
+  "center": [
+   -96.73,
+   43.55
+  ],
+  "zoom": 10.8,
+  "st": "SD"
+ },
+ "portlandme": {
+  "name": "Portland",
+  "region": "Casco Bay, Maine",
+  "box": [
+   -70.46,
+   -70.1,
+   43.52,
+   43.82
+  ],
+  "center": [
+   -70.28,
+   43.67
+  ],
+  "zoom": 10.8,
+  "st": "ME"
+ },
+ "phoenixcentral": {
+  "name": "Phoenix",
+  "region": "Central Phoenix and Tempe, Arizona",
+  "box": [
+   -112.2,
+   -111.84,
+   33.3,
+   33.6
+  ],
+  "center": [
+   -112.02,
+   33.45
+  ],
+  "zoom": 10.8,
+  "st": "AZ",
+  "az": true
+ },
+ "columbus": {
+  "name": "Columbus",
+  "region": "Franklin County, Ohio",
+  "box": [
+   -83.18,
+   -82.82,
+   39.82,
+   40.12
+  ],
+  "center": [
+   -83.0,
+   39.97
+  ],
+  "zoom": 10.8,
+  "st": "OH"
+ },
+ "reno": {
+  "name": "Reno",
+  "region": "Truckee Meadows, Nevada",
+  "box": [
+   -119.98,
+   -119.62,
+   39.37,
+   39.67
+  ],
+  "center": [
+   -119.8,
+   39.52
+  ],
+  "zoom": 10.8,
+  "st": "NV"
+ },
+ "fargo": {
+  "name": "Fargo",
+  "region": "Red River Valley, North Dakota",
+  "box": [
+   -96.98,
+   -96.62,
+   46.72,
+   47.02
+  ],
+  "center": [
+   -96.8,
+   46.87
+  ],
+  "zoom": 10.8,
+  "st": "ND"
+ },
+ "losthills": {
+  "name": "Lost Hills",
+  "region": "Belridge and Lost Hills oil fields, California",
+  "box": [
+   -119.9,
+   -119.54,
+   35.4,
+   35.7
+  ],
+  "center": [
+   -119.72,
+   35.55
+  ],
+  "zoom": 10.8,
+  "st": "CA"
+ },
+ "amarillo": {
+  "name": "Amarillo",
+  "region": "Texas Panhandle, Texas",
+  "box": [
+   -102.01,
+   -101.65,
+   35.05,
+   35.35
+  ],
+  "center": [
+   -101.83,
+   35.2
+  ],
+  "zoom": 10.8,
+  "st": "TX"
+ },
+ "boise": {
+  "name": "Boise",
+  "region": "Treasure Valley, Idaho",
+  "box": [
+   -116.43,
+   -116.07,
+   43.45,
+   43.75
+  ],
+  "center": [
+   -116.25,
+   43.6
+  ],
+  "zoom": 10.8,
+  "st": "ID"
+ },
+ "savannah": {
+  "name": "Savannah",
+  "region": "Chatham County, Georgia",
+  "box": [
+   -81.3,
+   -80.94,
+   31.91,
+   32.21
+  ],
+  "center": [
+   -81.12,
+   32.06
+  ],
+  "zoom": 10.8,
+  "st": "GA"
+ },
+ "charlestonwv": {
+  "name": "Charleston",
+  "region": "Kanawha Valley, West Virginia",
+  "box": [
+   -81.83,
+   -81.47,
+   38.21,
+   38.51
+  ],
+  "center": [
+   -81.65,
+   38.36
+  ],
+  "zoom": 10.8,
+  "st": "WV"
+ },
+ "portland": {
+  "name": "Portland",
+  "region": "Willamette Valley, Oregon",
+  "box": [
+   -122.84,
+   -122.48,
+   45.37,
+   45.67
+  ],
+  "center": [
+   -122.66,
+   45.52
+  ],
+  "zoom": 10.8,
+  "st": "OR"
+ },
+ "fortworth": {
+  "name": "Fort Worth",
+  "region": "Tarrant County, Texas",
+  "box": [
+   -97.5,
+   -97.14,
+   32.6,
+   32.9
+  ],
+  "center": [
+   -97.32,
+   32.75
+  ],
+  "zoom": 10.8,
+  "st": "TX"
+ },
+ "batonrouge": {
+  "name": "Baton Rouge",
+  "region": "East Baton Rouge Parish, Louisiana",
+  "box": [
+   -91.3,
+   -90.94,
+   30.3,
+   30.6
+  ],
+  "center": [
+   -91.12,
+   30.45
+  ],
+  "zoom": 10.8,
+  "st": "LA"
+ },
+ "nashville": {
+  "name": "Nashville",
+  "region": "Davidson County, Tennessee",
+  "box": [
+   -86.96,
+   -86.6,
+   36.01,
+   36.31
+  ],
+  "center": [
+   -86.78,
+   36.16
+  ],
+  "zoom": 10.8,
+  "st": "TN"
+ },
+ "mobile": {
+  "name": "Mobile",
+  "region": "Mobile Bay, Alabama",
+  "box": [
+   -88.26,
+   -87.9,
+   30.54,
+   30.84
+  ],
+  "center": [
+   -88.08,
+   30.69
+  ],
+  "zoom": 10.8,
+  "st": "AL"
+ },
+ "minneapolis": {
+  "name": "Minneapolis and St Paul",
+  "region": "Twin Cities, Minnesota",
+  "box": [
+   -93.38,
+   -93.02,
+   44.81,
+   45.11
+  ],
+  "center": [
+   -93.2,
+   44.96
+  ],
+  "zoom": 10.8,
+  "st": "MN"
+ },
+ "corpuschristi": {
+  "name": "Corpus Christi",
+  "region": "Nueces County, Texas",
+  "box": [
+   -97.6,
+   -97.24,
+   27.63,
+   27.93
+  ],
+  "center": [
+   -97.42,
+   27.78
+  ],
+  "zoom": 10.8,
+  "st": "TX"
+ },
+ "tampa": {
+  "name": "Tampa",
+  "region": "Tampa Bay, Florida",
+  "box": [
+   -82.66,
+   -82.3,
+   27.8,
+   28.1
+  ],
+  "center": [
+   -82.48,
+   27.95
+  ],
+  "zoom": 10.8,
+  "st": "FL"
+ },
+ "deming": {
+  "name": "Deming",
+  "region": "Mimbres Basin, New Mexico",
+  "box": [
+   -107.93,
+   -107.57,
+   32.1,
+   32.4
+  ],
+  "center": [
+   -107.75,
+   32.25
+  ],
+  "zoom": 10.8,
+  "st": "NM"
+ },
+ "saltlake": {
+  "name": "Salt Lake City",
+  "region": "Salt Lake Valley, Utah",
+  "box": [
+   -112.1,
+   -111.74,
+   40.57,
+   40.87
+  ],
+  "center": [
+   -111.92,
+   40.72
+  ],
+  "zoom": 10.8,
+  "st": "UT"
+ },
+ "richmond": {
+  "name": "Richmond",
+  "region": "James River, Virginia",
+  "box": [
+   -77.63,
+   -77.27,
+   37.38,
+   37.68
+  ],
+  "center": [
+   -77.45,
+   37.53
+  ],
+  "zoom": 10.8,
+  "st": "VA"
+ },
+ "sanantonio": {
+  "name": "San Antonio",
+  "region": "Bexar County, Texas",
+  "box": [
+   -98.68,
+   -98.32,
+   29.3,
+   29.6
+  ],
+  "center": [
+   -98.5,
+   29.45
+  ],
+  "zoom": 10.8,
+  "st": "TX"
+ },
+ "carlsbad": {
+  "name": "Carlsbad",
+  "region": "Delaware Basin, New Mexico",
+  "box": [
+   -104.38,
+   -104.02,
+   32.25,
+   32.55
+  ],
+  "center": [
+   -104.2,
+   32.4
+  ],
+  "zoom": 10.8,
+  "st": "NM"
+ },
+ "imperial": {
+  "name": "Imperial Valley",
+  "region": "El Centro, California",
+  "box": [
+   -115.7,
+   -115.34,
+   32.67,
+   32.97
+  ],
+  "center": [
+   -115.52,
+   32.82
+  ],
+  "zoom": 10.8,
+  "st": "CA"
+ },
+ "baytown": {
+  "name": "Baytown and Galveston Bay",
+  "region": "East Harris County, Texas",
+  "box": [
+   -95.26,
+   -94.9,
+   29.53,
+   29.83
+  ],
+  "center": [
+   -95.08,
+   29.68
+  ],
+  "zoom": 10.8,
+  "st": "TX"
+ },
+ "losangeles": {
+  "name": "Los Angeles",
+  "region": "Long Beach and the LA basin, California",
+  "box": [
+   -118.38,
+   -118.02,
+   33.75,
+   34.05
+  ],
+  "center": [
+   -118.2,
+   33.9
+  ],
+  "zoom": 10.8,
+  "st": "CA"
+ },
+ "boston": {
+  "name": "Boston",
+  "region": "Greater Boston, Massachusetts",
+  "box": [
+   -71.26,
+   -70.9,
+   42.2,
+   42.5
+  ],
+  "center": [
+   -71.08,
+   42.35
+  ],
+  "zoom": 10.8,
+  "st": "MA"
+ },
+ "wilmington": {
+  "name": "Wilmington",
+  "region": "New Castle County, Delaware",
+  "box": [
+   -75.74,
+   -75.38,
+   39.57,
+   39.87
+  ],
+  "center": [
+   -75.56,
+   39.72
+  ],
+  "zoom": 10.8,
+  "st": "DE"
+ },
+ "wichita": {
+  "name": "Wichita",
+  "region": "Sedgwick County, Kansas",
+  "box": [
+   -97.52,
+   -97.16,
+   37.54,
+   37.84
+  ],
+  "center": [
+   -97.34,
+   37.69
+  ],
+  "zoom": 10.8,
+  "st": "KS"
+ },
+ "birmingham": {
+  "name": "Birmingham",
+  "region": "Jefferson County, Alabama",
+  "box": [
+   -86.98,
+   -86.62,
+   33.37,
+   33.67
+  ],
+  "center": [
+   -86.8,
+   33.52
+  ],
+  "zoom": 10.8,
+  "st": "AL"
+ },
+ "stuttgart": {
+  "name": "Grand Prairie",
+  "region": "Stuttgart, Arkansas",
+  "box": [
+   -91.73,
+   -91.37,
+   34.35,
+   34.65
+  ],
+  "center": [
+   -91.55,
+   34.5
+  ],
+  "zoom": 10.8,
+  "st": "AR"
+ },
+ "sanluis": {
+  "name": "San Luis Valley",
+  "region": "Alamosa, Colorado",
+  "box": [
+   -106.08,
+   -105.72,
+   37.4,
+   37.7
+  ],
+  "center": [
+   -105.9,
+   37.55
+  ],
+  "zoom": 10.8,
+  "st": "CO"
+ },
+ "columbiasc": {
+  "name": "Columbia",
+  "region": "Richland County, South Carolina",
+  "box": [
+   -81.21,
+   -80.85,
+   33.85,
+   34.15
+  ],
+  "center": [
+   -81.03,
+   34.0
+  ],
+  "zoom": 10.8,
+  "st": "SC"
+ },
+ "conroe": {
+  "name": "The Woodlands and Conroe",
+  "region": "Montgomery County, Texas",
+  "box": [
+   -95.66,
+   -95.3,
+   30.09,
+   30.39
+  ],
+  "center": [
+   -95.48,
+   30.24
+  ],
+  "zoom": 10.8,
+  "st": "TX"
+ },
+ "memphis": {
+  "name": "Memphis",
+  "region": "Shelby County, Tennessee",
+  "box": [
+   -90.18,
+   -89.82,
+   34.98,
+   35.28
+  ],
+  "center": [
+   -90.0,
+   35.13
+  ],
+  "zoom": 10.8,
+  "st": "TN"
+ },
+ "milwaukee": {
+  "name": "Milwaukee",
+  "region": "Milwaukee County, Wisconsin",
+  "box": [
+   -88.13,
+   -87.77,
+   42.89,
+   43.19
+  ],
+  "center": [
+   -87.95,
+   43.04
+  ],
+  "zoom": 10.8,
+  "st": "WI"
+ },
+ "hartford": {
+  "name": "Hartford",
+  "region": "Connecticut River valley, Connecticut",
+  "box": [
+   -72.86,
+   -72.5,
+   41.61,
+   41.91
+  ],
+  "center": [
+   -72.68,
+   41.76
+  ],
+  "zoom": 10.8,
+  "st": "CT"
+ },
+ "providence": {
+  "name": "Providence",
+  "region": "Narragansett Bay, Rhode Island",
+  "box": [
+   -71.6,
+   -71.24,
+   41.65,
+   41.95
+  ],
+  "center": [
+   -71.42,
+   41.8
+  ],
+  "zoom": 10.8,
+  "st": "RI"
+ },
+ "oklahomacity": {
+  "name": "Oklahoma City",
+  "region": "Central Oklahoma, Oklahoma",
+  "box": [
+   -97.7,
+   -97.34,
+   35.32,
+   35.62
+  ],
+  "center": [
+   -97.52,
+   35.47
+  ],
+  "zoom": 10.8,
+  "st": "OK"
+ },
+ "desmoines": {
+  "name": "Des Moines",
+  "region": "Polk County, Iowa",
+  "box": [
+   -93.8,
+   -93.44,
+   41.44,
+   41.74
+  ],
+  "center": [
+   -93.62,
+   41.59
+  ],
+  "zoom": 10.8,
+  "st": "IA"
+ },
+ "austin": {
+  "name": "Austin",
+  "region": "Travis County, Texas",
+  "box": [
+   -97.92,
+   -97.56,
+   30.13,
+   30.43
+  ],
+  "center": [
+   -97.74,
+   30.28
+  ],
+  "zoom": 10.8,
+  "st": "TX"
+ },
+ "jacksonville": {
+  "name": "Jacksonville",
+  "region": "Duval County, Florida",
+  "box": [
+   -81.84,
+   -81.48,
+   30.17,
+   30.47
+  ],
+  "center": [
+   -81.66,
+   30.32
+  ],
+  "zoom": 10.8,
+  "st": "FL"
+ },
+ "lubbock": {
+  "name": "Lubbock",
+  "region": "Southern High Plains, Texas",
+  "box": [
+   -102.05,
+   -101.69,
+   33.43,
+   33.73
+  ],
+  "center": [
+   -101.87,
+   33.58
+  ],
+  "zoom": 10.8,
+  "st": "TX"
+ },
+ "raleigh": {
+  "name": "Raleigh",
+  "region": "Wake County, North Carolina",
+  "box": [
+   -78.83,
+   -78.47,
+   35.65,
+   35.95
+  ],
+  "center": [
+   -78.65,
+   35.8
+  ],
+  "zoom": 10.8,
+  "st": "NC"
+ },
+ "billings": {
+  "name": "Billings",
+  "region": "Yellowstone County, Montana",
+  "box": [
+   -108.7,
+   -108.34,
+   45.63,
+   45.93
+  ],
+  "center": [
+   -108.52,
+   45.78
+  ],
+  "zoom": 10.8,
+  "st": "MT"
+ },
+ "manchester": {
+  "name": "Manchester",
+  "region": "Merrimack Valley, New Hampshire",
+  "box": [
+   -71.63,
+   -71.27,
+   42.83,
+   43.13
+  ],
+  "center": [
+   -71.45,
+   42.98
+  ],
+  "zoom": 10.8,
+  "st": "NH"
+ },
+ "midland": {
+  "name": "Midland and Odessa",
+  "region": "Permian Basin, Texas",
+  "box": [
+   -102.4,
+   -102.04,
+   31.77,
+   32.07
+  ],
+  "center": [
+   -102.22,
+   31.92
+  ],
+  "zoom": 10.8,
+  "st": "TX"
+ },
+ "idahofalls": {
+  "name": "Idaho Falls",
+  "region": "Eastern Snake River Plain, Idaho",
+  "box": [
+   -112.23,
+   -111.87,
+   43.35,
+   43.65
+  ],
+  "center": [
+   -112.05,
+   43.5
+  ],
+  "zoom": 10.8,
+  "st": "ID"
+ },
+ "oakland": {
+  "name": "East Bay",
+  "region": "Oakland and Hayward, California",
+  "box": [
+   -122.33,
+   -121.97,
+   37.57,
+   37.87
+  ],
+  "center": [
+   -122.15,
+   37.72
+  ],
+  "zoom": 10.8,
+  "st": "CA"
+ },
+ "philadelphia": {
+  "name": "Philadelphia",
+  "region": "Delaware Valley, Pennsylvania",
+  "box": [
+   -75.35,
+   -74.99,
+   39.8,
+   40.1
+  ],
+  "center": [
+   -75.17,
+   39.95
+  ],
+  "zoom": 10.8,
+  "st": "PA"
+ },
+ "miami": {
+  "name": "Miami",
+  "region": "Miami-Dade County, Florida",
+  "box": [
+   -80.43,
+   -80.07,
+   25.65,
+   25.95
+  ],
+  "center": [
+   -80.25,
+   25.8
+  ],
+  "zoom": 10.8,
+  "st": "FL"
+ },
+ "orlando": {
+  "name": "Orlando",
+  "region": "Orange County, Florida",
+  "box": [
+   -81.56,
+   -81.2,
+   28.37,
+   28.67
+  ],
+  "center": [
+   -81.38,
+   28.52
+  ],
+  "zoom": 10.8,
+  "st": "FL"
+ },
+ "atlanticcity": {
+  "name": "Atlantic City",
+  "region": "New Jersey shore, New Jersey",
+  "box": [
+   -74.66,
+   -74.3,
+   39.23,
+   39.53
+  ],
+  "center": [
+   -74.48,
+   39.38
+  ],
+  "zoom": 10.8,
+  "st": "NJ"
+ },
+ "albuquerque": {
+  "name": "Albuquerque",
+  "region": "Middle Rio Grande Basin, New Mexico",
+  "box": [
+   -106.8,
+   -106.44,
+   34.95,
+   35.25
+  ],
+  "center": [
+   -106.62,
+   35.1
+  ],
+  "zoom": 10.8,
+  "st": "NM"
+ },
+ "pahrump": {
+  "name": "Pahrump",
+  "region": "Pahrump Valley, Nevada",
+  "box": [
+   -116.17,
+   -115.81,
+   36.05,
+   36.35
+  ],
+  "center": [
+   -115.99,
+   36.2
+  ],
+  "zoom": 10.8,
+  "st": "NV"
+ },
+ "pittsburgh": {
+  "name": "Pittsburgh",
+  "region": "Allegheny County, Pennsylvania",
+  "box": [
+   -80.16,
+   -79.8,
+   40.29,
+   40.59
+  ],
+  "center": [
+   -79.98,
+   40.44
+  ],
+  "zoom": 10.8,
+  "st": "PA"
+ },
+ "charlotte": {
+  "name": "Charlotte",
+  "region": "Mecklenburg County, North Carolina",
+  "box": [
+   -81.02,
+   -80.66,
+   35.07,
+   35.37
+  ],
+  "center": [
+   -80.84,
+   35.22
+  ],
+  "zoom": 10.8,
+  "st": "NC"
+ },
+ "kansascity": {
+  "name": "Kansas City",
+  "region": "Jackson County, Missouri",
+  "box": [
+   -94.76,
+   -94.4,
+   38.95,
+   39.25
+  ],
+  "center": [
+   -94.58,
+   39.1
+  ],
+  "zoom": 10.8,
+  "st": "MO"
+ },
+ "cleveland": {
+  "name": "Cleveland",
+  "region": "Cuyahoga County, Ohio",
+  "box": [
+   -81.88,
+   -81.52,
+   41.31,
+   41.61
+  ],
+  "center": [
+   -81.7,
+   41.46
+  ],
+  "zoom": 10.8,
+  "st": "OH"
+ },
+ "baltimore": {
+  "name": "Baltimore",
+  "region": "Patapsco River, Maryland",
+  "box": [
+   -76.78,
+   -76.42,
+   39.13,
+   39.43
+  ],
+  "center": [
+   -76.6,
+   39.28
+  ],
+  "zoom": 10.8,
+  "st": "MD"
+ },
+ "lascruces": {
+  "name": "Las Cruces",
+  "region": "Mesilla Valley, New Mexico",
+  "box": [
+   -106.96,
+   -106.6,
+   32.17,
+   32.47
+  ],
+  "center": [
+   -106.78,
+   32.32
+  ],
+  "zoom": 10.8,
+  "st": "NM"
+ },
+ "fresno": {
+  "name": "Fresno",
+  "region": "Fresno County, California",
+  "box": [
+   -120.03,
+   -119.67,
+   36.55,
+   36.85
+  ],
+  "center": [
+   -119.85,
+   36.7
+  ],
+  "zoom": 10.8,
+  "st": "CA"
+ },
+ "stlouis": {
+  "name": "St. Louis",
+  "region": "Mississippi River valley, Missouri",
+  "box": [
+   -90.4,
+   -90.04,
+   38.48,
+   38.78
+  ],
+  "center": [
+   -90.22,
+   38.63
+  ],
+  "zoom": 10.8,
+  "st": "MO"
+ },
+ "littlerock": {
+  "name": "Little Rock",
+  "region": "Pulaski County, Arkansas",
+  "box": [
+   -92.47,
+   -92.11,
+   34.59,
+   34.89
+  ],
+  "center": [
+   -92.29,
+   34.74
+  ],
+  "zoom": 10.8,
+  "st": "AR"
+ },
+ "pasorobles": {
+  "name": "Paso Robles",
+  "region": "Salinas Valley head, California",
+  "box": [
+   -120.8,
+   -120.44,
+   35.5,
+   35.8
+  ],
+  "center": [
+   -120.62,
+   35.65
+  ],
+  "zoom": 10.8,
+  "st": "CA"
+ },
+ "sanjose": {
+  "name": "San Jose",
+  "region": "Santa Clara Valley, California",
+  "box": [
+   -122.1,
+   -121.74,
+   37.21,
+   37.51
+  ],
+  "center": [
+   -121.92,
+   37.36
+  ],
+  "zoom": 10.8,
+  "st": "CA"
+ },
+ "harquahala": {
+  "name": "Harquahala Plain",
+  "region": "La Paz and Maricopa counties, Arizona",
+  "box": [
+   -113.33,
+   -112.97,
+   33.3,
+   33.6
+  ],
+  "center": [
+   -113.15,
+   33.45
+  ],
+  "zoom": 10.8,
+  "st": "AZ",
+  "az": true
+ },
+ "louisville": {
+  "name": "Louisville",
+  "region": "Jefferson County, Kentucky",
+  "box": [
+   -85.92,
+   -85.56,
+   38.09,
+   38.39
+  ],
+  "center": [
+   -85.74,
+   38.24
+  ],
+  "zoom": 10.8,
+  "st": "KY"
+ },
+ "sandiego": {
+  "name": "San Diego",
+  "region": "San Diego County, California",
+  "box": [
+   -117.28,
+   -116.92,
+   32.61,
+   32.91
+  ],
+  "center": [
+   -117.1,
+   32.76
+  ],
+  "zoom": 10.8,
+  "st": "CA"
+ },
+ "newyork": {
+  "name": "New York City",
+  "region": "Five boroughs and Newark, New York",
+  "box": [
+   -74.18,
+   -73.82,
+   40.57,
+   40.87
+  ],
+  "center": [
+   -74.0,
+   40.72
+  ],
+  "zoom": 10.8,
+  "st": "NY"
+ },
+ "gardencity": {
+  "name": "Garden City",
+  "region": "High Plains aquifer, Kansas",
+  "box": [
+   -101.05,
+   -100.69,
+   37.82,
+   38.12
+  ],
+  "center": [
+   -100.87,
+   37.97
+  ],
+  "zoom": 10.8,
+  "st": "KS"
+ },
+ "oxnard": {
+  "name": "Oxnard",
+  "region": "Oxnard Plain, California",
+  "box": [
+   -119.33,
+   -118.97,
+   34.05,
+   34.35
+  ],
+  "center": [
+   -119.15,
+   34.2
+  ],
+  "zoom": 10.8,
+  "st": "CA"
+ },
+ "indianapolis": {
+  "name": "Indianapolis",
+  "region": "Marion County, Indiana",
+  "box": [
+   -86.34,
+   -85.98,
+   39.62,
+   39.92
+  ],
+  "center": [
+   -86.16,
+   39.77
+  ],
+  "zoom": 10.8,
+  "st": "IN"
+ },
+ "stockton": {
+  "name": "Stockton",
+  "region": "San Joaquin Delta, California",
+  "box": [
+   -121.51,
+   -121.15,
+   37.8,
+   38.1
+  ],
+  "center": [
+   -121.33,
+   37.95
+  ],
+  "zoom": 10.8,
+  "st": "CA"
+ },
+ "sacramentocity": {
+  "name": "Sacramento",
+  "region": "Sacramento and the Delta edge, California",
+  "box": [
+   -121.63,
+   -121.27,
+   38.4,
+   38.7
+  ],
+  "center": [
+   -121.45,
+   38.55
+  ],
+  "zoom": 10.8,
+  "st": "CA"
+ },
+ "washington": {
+  "name": "Washington",
+  "region": "District of Columbia, District of Columbia",
+  "box": [
+   -77.21,
+   -76.85,
+   38.75,
+   39.05
+  ],
+  "center": [
+   -77.03,
+   38.9
+  ],
+  "zoom": 10.8,
+  "st": "DC"
+ },
+ "williston": {
+  "name": "Williston",
+  "region": "Bakken oil field, North Dakota",
+  "box": [
+   -103.8,
+   -103.44,
+   48.0,
+   48.3
+  ],
+  "center": [
+   -103.62,
+   48.15
+  ],
+  "zoom": 10.8,
+  "st": "ND"
+ },
+ "cheyenne": {
+  "name": "Cheyenne",
+  "region": "Laramie County, Wyoming",
+  "box": [
+   -104.98,
+   -104.62,
+   40.99,
+   41.29
+  ],
+  "center": [
+   -104.8,
+   41.14
+  ],
+  "zoom": 10.8,
+  "st": "WY"
+ },
+ "mcallen": {
+  "name": "McAllen",
+  "region": "Lower Rio Grande Valley, Texas",
+  "box": [
+   -98.4,
+   -98.04,
+   26.07,
+   26.37
+  ],
+  "center": [
+   -98.22,
+   26.22
+  ],
+  "zoom": 10.8,
+  "st": "TX"
+ }
+}

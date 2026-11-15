@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>StrainWatch: where the ground bends the line</title>
+<meta name="description" content="Draw any road, rail line, pipeline or canal and rank every 300 m of it by how unevenly the ground beneath is sinking. NASA OPERA DISP-S1 and NISAR radar, checked against surveys and GPS.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&display=swap" rel="stylesheet">
+<link href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" rel="stylesheet">
+<link href="css/style.css" rel="stylesheet">
+</head>
+<body class="story loading">
+
+<div id="progress"><i></i></div>
+
+<header class="top">
+  <div class="brand">
+    <button class="wordmark" id="homeBtn" title="Read the story again">StrainWatch</button>
+    <span class="chip">NASA OPERA · NISAR</span>
+  </div>
+  <nav class="sites" id="siteTabs" aria-label="Site"></nav>
+  <div class="tally" id="tally" aria-live="polite"></div>
+  <div class="actions">
+    <button class="btn ghost" id="demoBtn" title="A hands-off walk through the whole loop on the validated case">30-second demo</button>
+    <button class="btn teal" id="plannerBtn">Inspection Planner</button>
+    <div class="menuwrap">
+      <button class="btn dark" id="menuBtn" aria-haspopup="true" aria-expanded="false"><span class="burger"></span>Menu</button>
+      <div class="menu" id="menu" hidden>
+        <a href="#" data-act="story">Read the story</a>
+        <a href="#sec-who">Who uses this</a>
+        <a href="#sec-table">Every piece, side by side</a>
+        <a href="#sec-record">Track record</a>
+        <a href="#sec-method">How it works and what it does not know</a>
+        <a href="#" data-act="csv">Download the ranked list (CSV)</a>
+        <a href="#" data-act="geojson">Download as a map layer (GeoJSON)</a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main class="stage">
+  <div id="mapwrap">
+    <div id="map"></div>
+    <div class="mapbar" id="mapbar">
+      <input id="search" type="search" placeholder="Find a road or line by name" autocomplete="off">
+      <div class="seg" id="layerSeg" role="tablist" aria-label="Map layer"></div>
+      <button class="pill" id="compareBtn" aria-pressed="false">Compare</button>
+      <button class="pill" id="truthBtn" aria-pressed="false" hidden>Survey benchmarks</button>
+      <button class="pill strong" id="drawBtn">Draw a line</button>
+      <label class="pill" for="fileIn">Upload GeoJSON</label>
+      <input id="fileIn" type="file" accept=".geojson,.json,application/geo+json,application/json" hidden>
+    </div>
+    <div class="seg base" id="baseSeg" role="group" aria-label="Base map"><button data-base="light" aria-pressed="true">Light</button><button data-base="satellite" aria-pressed="false">Satellite</button><button data-base="terrain" aria-pressed="false">Terrain</button></div>
+    <div class="scalehint" id="scalehint"></div>
+    <div id="splitter" hidden><div class="handle"><span></span></div><div class="lab left" id="splitL"></div><div class="lab right" id="splitR"></div></div>
+    <div class="legend" id="legend"></div>
+    <div class="drawhint" id="drawhint" hidden></div>
+    <div class="readout" id="readout" hidden></div>
+  </div>
+  <aside id="panel" aria-live="polite"></aside>
+</main>
+
+<div id="scrim"></div>
+<div id="story"></div>
+<button id="skip" class="skip">Skip to the map <span>×</span></button>
+
+<section class="below" id="sec-who">
+  <h2>Who uses this, and what they do with it</h2>
+  <p class="sub">StrainWatch answers one question for three kinds of people: where should the field crew go first? Everything else on this page exists to make that answer trustworthy.</p>
+  <div class="charts three" id="who"></div>
+</section>
+
+<section class="below" id="sec-table">
+  <h2>Every piece, side by side</h2>
+  <p class="sub" id="tableSub"></p>
+  <div class="tablewrap"><table id="bigtable"></table></div>
+  <p class="foot"><button class="linkbtn" id="moreRows">Show 100 more</button></p>
+</section>
+
+<section class="below" id="sec-record">
+  <h2>Radar against the ground, and the track record</h2>
+  <p class="sub">The map shows where. These charts show how far to trust it: radar against surveyors and GPS, the one forward test we could run, and the checks that came back weak. Hover any point.</p>
+  <div class="charts" id="charts"></div>
+  <h3>What we tested, including what failed</h3>
+  <div class="tablewrap narrow"><table id="tests"></table></div>
+</section>
+
+<section class="below" id="sec-method">
+  <h2>How it works, and what it does not know</h2>
+  <div class="cols" id="method"></div>
+</section>
+
+<footer class="foot-bar">
+  <span>StrainWatch · NASA Space Apps Challenge 2026 · Dancing with the SARs</span>
+  <span id="built"></span>
+</footer>
+
+<div id="report" aria-hidden="true"></div>
+<div id="toast" hidden></div>
+
+<script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
+<script type="module" src="js/app.js"></script>
+</body>
+</html>
