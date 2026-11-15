@@ -234,7 +234,8 @@ body.story .sitemark:hover span { display: block !important; }
 .z-mid .sitemark span, .sitemark:hover span { display: block; }
 .z-mid .sitemark.hid:not(:hover) span { display: none; }
 .sitemark:hover { z-index: 5; }
-.dotkey { display: inline-block; width: 11px; height: 11px; border-radius: 2.5px; background: var(--ink); border: 1.5px solid rgba(60,58,52,.55); flex: none; }
+.dotkey { display: inline-block; width: 11px; height: 11px; border-radius: 50%; background: var(--ink); border: 2px solid #fff; box-shadow: 0 0 0 1px rgba(0,0,0,.4); flex: none; }
+.mkey { display: inline-block; width: 11px; height: 11px; border-radius: 2.5px; flex: none; }
 .dotkey.t-checked { background: var(--teal); } .dotkey.t-frontier { background: #8f7fb0; }
 #siteSel { border: 0; background: none; padding: 5px 6px; border-radius: 6px; font-weight: 600; font-size: 12.5px; color: var(--ink2); max-width: 210px; cursor: pointer; }
 #siteSel.on { background: var(--teal); color: #fff; }
@@ -274,7 +275,7 @@ body.story .legend { left: auto; right: 14px; bottom: 34px; }
 .step.hero .dek { font: 400 17.5px/1.5 var(--body); }
 .step.hero .by { font: 12px/1.4 var(--ui); color: var(--muted); margin-top: 14px; }
 .step.hero .scroll { font: 700 10.5px/1 var(--ui); letter-spacing: .14em; color: var(--muted); margin-top: 22px; }
-.sw-inline { display: inline-block; width: 10px; height: 10px; border-radius: 2.5px; vertical-align: -1px; margin-right: 3px; }
+.sw-inline { display: inline-block; width: 10px; height: 10px; vertical-align: -1px; margin-right: 3px; }
 
 /* ------------------------------------------------ below the map */
 .below { max-width: 1160px; margin: 0 auto; padding: 44px 24px 8px; }

@@ -856,7 +856,7 @@ function siteStat(s) {
 function worldLegend() {
   const ramp = (cols, ticks) => `<div class="ramp">${cols.map((x) => `<i style="background:${x}"></i>`).join('')}</div><div class="ticks">${ticks.map((v) => `<span>${v}</span>`).join('')}</div>`;
   const key = (col, text) => `<span><i class="dotkey" style="background:${col}"></i>${text}</span>`;
-  const tkey = (v, text) => `<span><i class="dotkey" style="background:${v === 'validated' ? TRUTH_COL[v] : '#fff'};border:2px ${v === 'none' ? 'dashed' : 'solid'} ${TRUTH_COL[v]}"></i>${text}</span>`;
+  const tkey = (v, text) => `<span><i class="mkey" style="background:${v === 'validated' ? TRUTH_COL[v] : '#fff'};border:2px ${v === 'none' ? 'dashed' : 'solid'} ${TRUTH_COL[v]}"></i>${text}</span>`;
   let h;
   if (S.dotBy === 'speed') h = `<b>Markers: fastest ground at each place · mm/yr</b>${ramp(['#fbf3e8', ...RATE_COLS], ['0', ...OV_BREAKS])}`;
   else if (S.dotBy === 'uneven') h = `<b>Markers: where the top 5% of unevenness starts · mm/yr per km</b>${ramp(['#f1f4f9', ...UN_COLS], ['0', ...UN_BREAKS])}<div class="note">Low values mean nothing stands out there.</div>`;
