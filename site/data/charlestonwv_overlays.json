@@ -1,1 +1,1 @@
-{"reference":[]}
+{"reference":[],"gps":[{"name":"WVCH","lon":-81.5704,"lat":38.3128,"gps":-3.32,"radar":-0.51,"note":"GPS vertical rate over 9.4 years of the radar period; radar converted from line of sight (approximate)."},{"name":"WVCN","lon":-81.6632,"lat":38.3707,"gps":0.15,"radar":-0.03,"note":"GPS vertical rate over 6.4 years of the radar period; radar converted from line of sight (approximate)."}]}

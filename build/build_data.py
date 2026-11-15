@@ -115,6 +115,22 @@ def nisar_layer(site, ndir, L):
     return st
 
 
+COS39 = float(np.cos(np.radians(39.0)))
+
+
+def load_truth(path):
+    """Ground-truth check written by ground_truth.py, trimmed for the browser. None if the place was never checked."""
+    if not os.path.exists(path):
+        return None
+    t = json.load(open(path))
+    tied = bool(t.get("offset_removed") and t.get("verdict") == "agree" and t.get("n", 0) >= 3)
+    off = t.get("offset", 0.0) if tied else 0.0
+    out = dict(verdict=t["verdict"], n=t.get("n", 0), n_found=t.get("n_found", 0), misfit=t.get("misfit"), offset=t.get("offset"), offset_removed=bool(t.get("offset_removed")),
+               gps_fastest=t.get("gps_fastest"), r=t.get("r"), tied=tied, survey=t.get("survey"), source=t.get("source"),
+               stations=[dict(name=s["id"], lon=s["lon"], lat=s["lat"], gps=s["gps_up"], radar=None if s["radar"] is None else round(s["radar"] - off, 2), years=s["years"]) for s in t.get("stations", [])])
+    return out
+
+
 def fit_rate(cum, t, nmin):
     """nan-aware least-squares slope per pixel; cum (T, r, c) -> units of cum per year"""
     tt = (t - t.mean()).astype("float64")
@@ -399,6 +415,7 @@ def willcox():
         id="willcox", name="Willcox Basin", region="Cochise County, Arizona", role="Validated core", tier="checked", check="38 survey benchmarks and a forward fissure test", bbox=[round(v, 5) for v in bb],
         center=[-109.86, 32.22], zoom=9.6, rate_kind="vertical-equivalent", layers=L, ts=ts, uneven_q=q, uneven_q_n=n,
         uneven_q_domain="basin-floor cells (slope < 2 deg, below 1450 m)", lines="willcox_lines.json", overlays="willcox_overlays.json",
+        truth=dict(verdict="validated", n=38, note="38 survey benchmarks (rank correlation 0.85) and a forward test against newly mapped fissures"),
         st="AZ", nisar=dict(track="128", frame="072", dir="D", pairs=24, first="20251107", last="20261021", r=0.51, verdict="moderate",
                             note="Rate-map correlation over the months both sensors cover; 3 to 19 mm of noise per pair; often no data at the fastest spot."),
         summary=summary, sensor="Sentinel-1 via OPERA DISP-S1, frame 34478", reference="Median of three Dragoon Mountains bedrock patches",
@@ -488,6 +505,7 @@ def mexico():
         id="mexico", name="Mexico City", region="Valley of Mexico", role="Proof it transfers", tier="checked", check="9 GPS stations", bbox=[round(v, 5) for v in bb],
         center=[-99.06, 19.40], zoom=10.6, rate_kind="vertical-equivalent", layers=L, ts=ts, uneven_q=q, uneven_q_n=n,
         uneven_q_domain="all cells passing the quality mask", lines="mexico_lines.json", overlays="mexico_overlays.json", summary=summary,
+        truth=dict(verdict="validated", n=9, note="9 GPS stations: r 0.98, error 17 mm/yr"),
         st="MX", nisar=dict(track="019", frame="011", dir="A", pairs=28, first="20251030", last="20261013", r=VAL["mexico_nisar"]["r"], slope=VAL["mexico_nisar"]["slope"],
                             n=VAL["mexico_nisar"]["n"], rmsd=VAL["mexico_nisar"]["rmsd"], verdict="strong", note="At the fastest GPS station NISAR reads -279 mm/yr; GPS says -262 to -268."),
         sensor="Sentinel-1 via OPERA DISP-S1, frame 20688", reference="GPS station TNGF", default_groups=["metro"]))
@@ -541,6 +559,8 @@ def phoenix():
             id=site, name=nm, region="Maricopa and Pinal counties, Arizona", role="Home site" if bx == "east" else "Measured, not ground-checked",
             tier="checked" if bx == "east" else "measured", check="26 survey benchmarks, ranking only" if bx == "east" else None, bbox=[round(v, 5) for v in bb], center=ctr, zoom=zoom,
             rate_kind="line of sight", layers=L, ts=ts, uneven_q=q, uneven_q_n=n, uneven_q_domain="all cells with a rate", st="AZ", nisar=nis,
+            truth=(dict(verdict="validated", n=26, note="26 survey benchmarks: rank correlation 0.90 (ranking only)") if bx == "east"
+                   else (lambda t: dict(t, tied=False) if t else dict(verdict="none", n=0, n_found=0, stations=[]))(load_truth(os.path.join(Ph, f"truth_{bx}.json")))),
             lines=f"{site}_lines.json", overlays=f"{site}_overlays.json", summary=summary, sensor="Sentinel-1 via OPERA DISP-S1, frame 7091",
             reference="Median of bedrock windows (" + ", ".join(r_[0] for r_ in refs) + ")", default_groups=["roads", "canal", "rail", "pipeline"]))
 
@@ -562,7 +582,9 @@ def extra():
             print("   rejected by the quality gate:", {k: meta[k] for k in ("epochs", "with_rate")}); continue
         Mz = np.load(os.path.join(d, "maps.npz"))
         x, y, epsg = Mz["x"], Mz["y"], int(Mz["epsg"])
-        r30 = Mz["rate_mm_yr"]
+        truth = load_truth(os.path.join(d, "truth.json"))
+        tie = truth["offset"] * COS39 if truth and truth["tied"] else 0.0  # line-of-sight mm/yr to subtract so the map matches GPS
+        r30 = Mz["rate_mm_yr"] - tie
         has = np.isfinite(r30).astype("float32")
         v90 = bmean(r30, 3)
         v90[bmean(has, 3) < 0.45] = np.nan
@@ -580,11 +602,14 @@ def extra():
         L["valid"] = layer(site, "valid", g270, bmean(valid90, 3), 100, label="Share of dates with good data", unit="fraction", kind="valid")
         nis = nisar_layer(site, os.path.join(d, "nisar"), L)
         S = np.load(os.path.join(d, "series.npz"))
-        ts = cube(site, g270, bmean(S["cum_mm"], 9), [str(t) for t in S["dates"]])
+        tdec = np.array([decyear(t) for t in S["dates"]])
+        ts = cube(site, g270, bmean(S["cum_mm"], 9) - tie * (tdec - tdec[0])[:, None, None], [str(t) for t in S["dates"]])
         ts["unit"] = "mm, line of sight"
         bb = g90.lonlat_box()
         dump(f"{site}_lines.json", dict(groups=osm_groups(site, bb)))
         ov = dict(reference=[])
+        if truth and truth["stations"]:
+            ov["gps"] = [dict(name=s["name"], lon=s["lon"], lat=s["lat"], gps=s["gps"], radar=s["radar"], note=f"GPS vertical rate over {s['years']} years of the radar period; radar converted from line of sight (approximate).") for s in truth["stations"]]
         fp = os.path.join(HERE, "cache", f"fissures_{site}.geojson")
         if os.path.exists(fp):
             ov["fissures_known"] = dict(label="Mapped earth fissures (May 2026)", source="Arizona Geological Survey", f=line_features(fp, bb))
@@ -596,7 +621,9 @@ def extra():
         SITES.append(dict(
             id=site, name=meta["name"], region=meta["region"], st=PLACES[site].get("st"), nisar=nis, role="Measured, not ground-checked", tier="measured", check=None, bbox=[round(v, 5) for v in bb], center=ctr, zoom=zoom,
             rate_kind="line of sight", layers=L, ts=ts, uneven_q=q, uneven_q_n=n, uneven_q_domain="all cells with a rate", lines=f"{site}_lines.json", overlays=f"{site}_overlays.json",
-            summary=summary, sensor=f"Sentinel-1 via OPERA DISP-S1, frame {int(meta['frame'].lstrip('F'))}", reference="The steadiest ground in the window (not bedrock chosen by hand)",
+            truth=truth or dict(verdict="none", n=0, n_found=0, stations=[]),
+            summary=summary, sensor=f"Sentinel-1 via OPERA DISP-S1, frame {int(meta['frame'].lstrip('F'))}",
+            reference=(f"Tied to {truth['n']} GPS stations (Nevada Geodetic Laboratory)" if truth and truth["tied"] else "The steadiest ground in the window (not bedrock chosen by hand)"),
             default_groups=["roads", "canal", "rail", "pipeline"]))
 
 
@@ -631,7 +658,7 @@ def chennai():
     dump("chennai_lines.json", dict(groups=[]))
     SITES.append(dict(
         id="chennai", name="Chennai", region="Tamil Nadu, India", role="The frontier: NISAR only", tier="frontier", check=None, st="IND",
-        nisar=dict(pairs=8, first="20260624", last="20261010", verdict="frontier"), bbox=[round(v, 5) for v in bb], center=[80.22, 13.07], zoom=11.2,
+        nisar=dict(pairs=8, first="20260624", last="20261010", verdict="frontier"), truth=dict(verdict="none", n=0, n_found=0, stations=[], note="No ground truth exists here."), bbox=[round(v, 5) for v in bb], center=[80.22, 13.07], zoom=11.2,
         rate_kind="none", layers=L, ts=None, uneven_q=None, lines="chennai_lines.json", overlays="chennai_overlays.json",
         summary=dict(mdr_now=noise[0]["mdr_now"], months=noise[0]["months"]), sensor="NISAR GUNW, tracks 149 and 156", reference="Median of 8 presumed-stable points",
         default_groups=[], frontier=True))
@@ -651,6 +678,26 @@ if __name__ == "__main__":
         cov = dict(places=len(SITES), us_places=len(us), us_states=len({s["st"] for s in us} - {"DC"}), dc=any(s["st"] == "DC" for s in us), us_area_km2=round(area), conus_km2=8081000, us_share=round(area / 8081000, 4),
                    nisar_places=sum(1 for s in SITES if s.get("nisar") and s["nisar"].get("verdict") not in (None, "none")))
         print("COVERAGE", cov)
+        tp = [s for s in SITES if s.get("truth") and s["truth"]["verdict"] in ("agree", "weak")]
+        st_rows = []
+        for s in tp:
+            t = s["truth"]
+            off = 0.0 if t.get("tied") else (t.get("offset") or 0.0) if t.get("offset_removed") else 0.0
+            for g in t["stations"]:
+                if g["radar"] is not None:
+                    st_rows.append(dict(place=s["name"], st=s.get("st"), name=g["name"], gps=g["gps"], radar=round(g["radar"] - off, 2), n=t["n"]))
+        multi = [r for r in st_rows if r["n"] >= 3]
+        if len(multi) >= 10:
+            gx, ry = np.array([r["gps"] for r in multi]), np.array([r["radar"] for r in multi])
+            allstat = dict(n=len(multi), places=len({r["place"] for r in multi}), r=r3(float(np.corrcoef(gx, ry)[0, 1])), rms=r3(float(np.sqrt(np.mean((ry - gx) ** 2))), 1),
+                           median_abs=r3(float(np.median(np.abs(ry - gx))), 1))
+        else:
+            allstat = dict(n=len(multi))
+        cnt = lambda v: sum(1 for s in SITES if (s.get("truth") or {}).get("verdict") == v)
+        VAL["truth"] = dict(stations=st_rows, stats=allstat, counts=dict(validated=cnt("validated"), agree=cnt("agree"), weak=cnt("weak"), none=cnt("none")),
+                            thin=sum(1 for s in tp if s["truth"]["n"] < 3), tied=sum(1 for s in SITES if (s.get("truth") or {}).get("tied")),
+                            note="GPS vertical rates (Nevada Geodetic Laboratory, robust slope over the radar period) against the radar rate at each station. Radar is converted from line of sight with one angle (39 deg), good to about 12 %. At places with three or more stations the median difference is removed first, because the radar is relative and GPS is absolute.")
+        print("TRUTH", VAL["truth"]["counts"], VAL["truth"]["stats"], "tied", VAL["truth"]["tied"], "thin", VAL["truth"]["thin"])
         VAL["nisar_sites"] = [dict(id=s["id"], name=s["name"], st=s.get("st"), tier=s["tier"], **{k: s["nisar"].get(k) for k in ("r", "n", "pairs", "verdict", "s1_spread", "noise_mmyr", "cover_nisar", "cover_s1")})
                               for s in SITES if s.get("nisar") and s["nisar"].get("r") is not None]
         dump("sites.json", dict(built=datetime.utcnow().strftime("%Y-%m-%d %H:%M UTC"), coverage=cov, sites=SITES))

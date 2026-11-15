@@ -1,1 +1,1 @@
-{"reference":[]}
+{"reference":[],"gps":[{"name":"IDIF","lon":-112.052,"lat":43.5186,"gps":-1.09,"radar":-0.14,"note":"GPS vertical rate over 9.0 years of the radar period; radar converted from line of sight (approximate)."},{"name":"IDBB","lon":-112.0416,"lat":43.4816,"gps":-0.84,"radar":-1.18,"note":"GPS vertical rate over 7.0 years of the radar period; radar converted from line of sight (approximate)."}]}

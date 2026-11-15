@@ -1,1 +1,1 @@
-{"reference":[]}
+{"reference":[],"gps":[{"name":"COLA","lon":-81.1217,"lat":34.081,"gps":-2.24,"radar":-1.24,"note":"GPS vertical rate over 9.3 years of the radar period; radar converted from line of sight (approximate)."},{"name":"SCCO","lon":-81.0161,"lat":34.0013,"gps":2.21,"radar":0.43,"note":"GPS vertical rate over 7.4 years of the radar period; radar converted from line of sight (approximate)."}]}

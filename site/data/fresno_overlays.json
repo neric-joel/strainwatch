@@ -1,1 +1,1 @@
-{"reference":[]}
+{"reference":[],"gps":[{"name":"CAFR","lon":-119.7475,"lat":36.8144,"gps":-2.48,"radar":1.1,"note":"GPS vertical rate over 9.7 years of the radar period; radar converted from line of sight (approximate)."},{"name":"RBRU","lon":-119.8287,"lat":36.7591,"gps":-8.96,"radar":-0.87,"note":"GPS vertical rate over 9.0 years of the radar period; radar converted from line of sight (approximate)."}]}

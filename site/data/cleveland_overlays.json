@@ -1,1 +1,1 @@
-{"reference":[]}
+{"reference":[],"gps":[{"name":"GARF","lon":-81.6149,"lat":41.4158,"gps":-0.01,"radar":-0.91,"note":"GPS vertical rate over 9.6 years of the radar period; radar converted from line of sight (approximate)."},{"name":"OHCD","lon":-81.6351,"lat":41.5407,"gps":-2.44,"radar":null,"note":"GPS vertical rate over 8.4 years of the radar period; radar converted from line of sight (approximate)."}]}

@@ -28,11 +28,11 @@ export function buildSteps(ctx) {
       view: { site: null, center: [-99, 36], zoom: 3.9 },
       html: `<div class="k">NASA Space Apps 2026 · Dancing with the SARs</div>
         <h1>The Ground Is Sinking Unevenly. Here Is Where It Bends the Line.</h1>
-        <p class="dek">Radar satellites measure how fast land sinks. The damage happens where it sinks <b>unevenly</b>. StrainWatch takes any road, rail line, pipeline or canal inside a processed radar window and tells you which stretches to check first, 300 metres at a time: ${ctx.exposure ? `so far ${f0(ctx.exposure.total.km)} km of road, rail, pipeline, canal and power line across the US and Mexico, with ${f0(ctx.exposure.total.strong_first_km)} km flagged to look at first` : `${ctx.sites.length} places so far`}. Ground-checked at three of those places, in two countries.</p>
+        <p class="dek">Radar satellites measure how fast land sinks. The damage happens where it sinks <b>unevenly</b>. StrainWatch takes any road, rail line, pipeline or canal inside a processed radar window and tells you which stretches to check first, 300 metres at a time: ${ctx.exposure ? `so far ${f0(ctx.exposure.total.km)} km of road, rail, pipeline, canal and power line across the US and Mexico, with ${f0(ctx.exposure.total.strong_first_km)} km flagged to look at first` : `${ctx.sites.length} places so far`}. Checked in depth at three places in two countries, and compared with GPS stations at ${ctx.truthCount('agree') + ctx.truthCount('weak')} more.</p>
         <p class="dek" style="margin-top:10px"><b>Which stretch should your crew check first?</b> Built for county road engineers, pipeline and canal operators, and state geologists.</p>
         <p><button class="btn teal" data-act="demo">Show me a county example</button></p>
         <div class="by">Data: NASA OPERA DISP-S1 (Sentinel-1) and NISAR · Arizona survey benchmarks and fissure maps · GPS · November 2026</div>
-        <div class="scroll">SCROLL ↓ &nbsp;·&nbsp; the map is live: drag it, zoom it, click a dot</div>`,
+        <div class="scroll">SCROLL ↓ &nbsp;·&nbsp; the map is live: drag it, zoom it, click a marker</div>`,
     },
     {
       id: 'who', kicker: 'Who uses this',
@@ -51,8 +51,8 @@ export function buildSteps(ctx) {
       id: 'world', kicker: 'One method, many places',
       title: `${ctx.sites.length} places, three levels of trust`,
       view: { site: null, center: [-98, 36.5], zoom: 3.9 },
-      body: `<p>Every dot is real radar, processed by the same code. They are not equally proven, and the map keeps them apart.</p>
-        <p>${sw('#147d6c')}<b>${nT('checked')} checked against the ground</b>: Willcox against surveyors and a fissure test, Mexico City against GPS, the Phoenix East Valley against surveyors.<br>${sw('#1c1b19')}<b>${nT('measured')} measured, not yet checked</b>, ${names(ctx.sites.filter((s) => s.tier === 'measured'))}${ctx.coverage.us_states >= 48 ? ': every lower-48 state has at least one' : ''}.<br>${sw('#8f7fb0')}<b>${nT('frontier')} NISAR only</b>: Chennai, where the honest answer is "not yet".</p>
+      body: `<p>Every marker is real radar, processed by the same code. They are not equally proven, and the map keeps them apart.</p>
+        <p>${sw('#147d6c')}<b>${nT('checked')} checked in depth</b>: Willcox against surveyors and a fissure test, Mexico City against GPS, the Phoenix East Valley against surveyors.<br>${sw('#2f9c86')}<b>${ctx.truthCount('agree')} more agree with GPS stations</b> inside their windows; ${sw('#c9701f')}${ctx.truthCount('weak')} agree only weakly, and ${ctx.truthCount('none')} have nothing to check against.<br><b>Those ${nT('measured')} were added by script</b>: ${names(ctx.sites.filter((s) => s.tier === 'measured'))}${ctx.coverage.us_states >= 48 ? ': every lower-48 state has at least one' : ''}.<br>${sw('#8f7fb0')}<b>${nT('frontier')} NISAR only</b>: Chennai, where the honest answer is "not yet".</p>
         <p><b>NISAR's job:</b> the ten-year history is Sentinel-1; NISAR can carry the watch forward once that record ends, and it is the only source in most of the world. Pairs from its first year are stacked at ${ctx.nisarPlaces()} places: of the ${ctx.nisarCount('strong') + ctx.nisarCount('moderate') + ctx.nisarCount('weak')} that move enough to compare, it agrees with Sentinel-1 at ${ctx.nisarCount('strong')}, loosely at ${ctx.nisarCount('moderate')}, not yet at ${ctx.nisarCount('weak')}. ${ctx.nisarSummary()}</p>
         <p class="fine">The dashed boxes are the processed windows, about ${((ctx.coverage.us_share || 0) * 100).toFixed(1)}% of the lower-48 land area. Everywhere else is not processed yet, which is not the same as stable.</p>`,
     },
@@ -142,12 +142,12 @@ export function buildSteps(ctx) {
         <p>Freeways, the Central Arizona Project canal, rail and power lines are ranked the same way, as a relative order only: the signal here is about ten times weaker than at Willcox. ${sw('#1c1b19')}Black lines are mapped earth fissures.</p>`,
     },
     extra.length ? {
-      id: 'more', kicker: 'Measured, not yet checked',
+      id: 'more', kicker: 'Added by script, then checked against GPS',
       title: `The same script, pointed at ${nT('measured')} more places`,
       view: { site: extra[0].id, center: extra[0].center, zoom: extra[0].zoom - 0.3, layer: 'rate', lines: true, fissures: 'known' },
       body: `<p>Adding a place takes one command and a few minutes of reading NASA's archive. ${extra.length <= 4 ? names(extra) : nT('measured') + ' places ' + names(extra)} were packed that way.</p>
         <p>This is <b>${extra[0].name}</b> (${extra[0].region}), where the fastest ground reads about <b>${f0(-extra[0].summary.fast_mmyr)} mm a year</b> relative to the steadiest ground in the window${extra[0].summary.valid_share < 0.5 ? `. Only ${Math.round(extra[0].summary.valid_share * 100)}% of the window kept a usable signal over the farm fields; the grey hatching is ground the radar could not read` : ''}. Its highways, canals, rail and pipelines are ranked exactly as at Willcox.</p>
-        <p><b>No surveyor or GPS has checked these numbers here.</b> They are shown as measurements waiting for ground truth, in black on the map, never in the same colour as the checked sites.</p>`,
+        <p>Each one was then compared with the GPS stations inside its window: <b>${ctx.truthCount('agree')} agree</b>, ${ctx.truthCount('weak')} agree only weakly, and ${ctx.truthCount('none')} have no station to check against. Every place says which, and none is shown in the same colour as the three checked in depth.</p>`,
     } : null,
     {
       id: 'chennai', kicker: 'The frontier',

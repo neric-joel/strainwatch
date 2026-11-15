@@ -1,1 +1,1 @@
-{"reference":[]}
+{"reference":[],"gps":[{"name":"INEG","lon":-102.2842,"lat":21.8562,"gps":-55.09,"radar":-48.05,"note":"GPS vertical rate over 9.6 years of the radar period; radar converted from line of sight (approximate)."},{"name":"UAGU","lon":-102.315,"lat":21.9185,"gps":-100.41,"radar":-100.2,"note":"GPS vertical rate over 9.6 years of the radar period; radar converted from line of sight (approximate)."}]}

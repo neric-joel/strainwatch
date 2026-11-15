@@ -1,1 +1,1 @@
-{"reference":[]}
+{"reference":[],"gps":[{"name":"CEGA","lon":-100.8778,"lat":20.4701,"gps":-3.54,"radar":null,"note":"GPS vertical rate over 4.2 years of the radar period; radar converted from line of sight (approximate)."},{"name":"CECM","lon":-100.8069,"lat":20.532,"gps":-41.64,"radar":-36.96,"note":"GPS vertical rate over 5.6 years of the radar period; radar converted from line of sight (approximate)."}]}

@@ -1,1 +1,1 @@
-{"reference":[]}
+{"reference":[],"gps":[{"name":"AL90","lon":-88.0317,"lat":30.6908,"gps":-0.15,"radar":0.99,"note":"GPS vertical rate over 9.2 years of the radar period; radar converted from line of sight (approximate)."},{"name":"ALML","lon":-88.1128,"lat":30.735,"gps":0.49,"radar":0.46,"note":"GPS vertical rate over 4.5 years of the radar period; radar converted from line of sight (approximate)."}]}

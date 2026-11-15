@@ -18,7 +18,7 @@ python serve.py
 ```
 
 Then open http://localhost:8765. It opens as a scroll story over a live map. "Skip to the map" (or `#explore` in the address)
-goes to the national view, where every processed place is a dot. Zoom into a dot, click it, click a state name, or use
+goes to the national view, where every processed place is a square marker. Zoom into one, click it, click a state name, or use
 "Jump to a place". `#site=willcox`, `#site=mexico`, `#site=sansimon` and so on open a place directly.
 
 ## What is on the map
@@ -26,7 +26,7 @@ goes to the national view, where every processed place is a dot. Zoom into a dot
 | Tier | Places | What stands behind it |
 |---|---|---|
 | Checked against ground truth | Willcox Basin (AZ), Mexico City, Phoenix East Valley (AZ) | Survey benchmarks, GPS, and a forward test against newly mapped earth fissures at Willcox |
-| Measured, not ground-checked | Places in most lower-48 states, plus Aguascalientes and Celaya | Real OPERA DISP-S1 radar, same code, no ground truth yet |
+| Measured, compared with GPS | Places in most lower-48 states, plus Aguascalientes and Celaya | Real OPERA DISP-S1 radar, same code. Each is compared with GPS stations inside its window (Nevada Geodetic Laboratory): 105 agree, 7 agree only weakly, 4 have no station. No survey or fissure test |
 | NISAR only | Chennai, India | A noise analysis; nothing is ranked |
 
 Each place is a window of roughly 35 km. Together the windows cover a small share of the country's land area (the app states
@@ -54,6 +54,11 @@ base maps, and five national views (trust level, sinking speed, unevenness, grou
   not predict where a fissure will open.
 - Mexico City: radar against 9 GPS stations, r 0.98, error 17 mm/yr. One station is off by about 50 mm/yr, cause unknown.
 - Mexico City: one year of stacked NISAR against ten years of Sentinel-1, r 0.94. At Willcox the two agree only loosely.
+- Every place added by script against GPS (Nevada Geodetic Laboratory vertical rates over the radar period): 105 agree,
+  7 agree only weakly, 4 have no station in the window. At the 60 places with three or more stations (308 stations), radar
+  against GPS gives r 0.89 and a typical difference of 0.7 mm/yr, after removing one constant per place, because the radar
+  is relative and GPS is absolute. 51 places rest on one or two stations, where that constant cannot be removed. This is
+  a consistency check on the sinking rate; it does not test the ranking.
 - NISAR at every other place: the app reports the agreement, strong or weak, place by place.
 - Chennai: not detectable yet; the app shows how long a record is needed.
 
@@ -76,6 +81,7 @@ with an Earthdata login).
 ```bash
 python build/add_site.py        # fetch OPERA DISP-S1 for the places in build/places.json
 python build/nisar_site.py fetch && python build/nisar_site.py process    # stack NISAR at every place
+python build/ground_truth.py    # compare every place with GPS stations (and Arizona survey benchmarks)
 python build/fetch_osm.py       # roads, rail, pipelines, power lines, canals (OpenStreetMap)
 python build/fetch_states.py    # state outlines (US Census)
 python build/build_data.py      # pack rasters, time series, lines and validation tables into site/data
@@ -111,5 +117,5 @@ contributors (ODbL); Copernicus GLO-30 DEM; OpenFreeMap / OpenMapTiles; Sentinel
 ## Limits
 
 A relative screening index. Not a damage assessment, not an engineering finding, not a forecast. Fissures are narrower than
-a radar pixel. Rates assume vertical motion. Places marked "not ground-checked" have no survey, GPS or fissure test behind
+a radar pixel. Rates assume vertical motion. Places added by script are compared with GPS only, often at one or two stations; they have no survey or fissure test behind
 them here.

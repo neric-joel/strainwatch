@@ -251,3 +251,17 @@ test('coverage is stated from the boxes, not rounded up', () => {
   assert.ok(!us.some((s) => s.id === 'chennai'), 'Chennai must not be counted as a US place');
   assert.ok(cov.us_share > 0 && cov.us_share < 0.2, `share ${cov.us_share}`);
 });
+
+test('every place carries a ground-truth verdict, and a map is tied to GPS only where three or more stations agree', () => {
+  const allowed = ['validated', 'agree', 'weak', 'none'];
+  for (const s of sites) {
+    assert.ok(s.truth && allowed.includes(s.truth.verdict), `${s.id}: ground-truth verdict ${s.truth && s.truth.verdict}`);
+    if (s.truth.verdict === 'validated') assert.equal(s.tier, 'checked', `${s.id} validated but not in the checked tier`);
+    if (s.tier === 'checked') assert.equal(s.truth.verdict, 'validated');
+    if (s.truth.tied) assert.ok(s.truth.n >= 3 && s.truth.verdict === 'agree', `${s.id} tied on ${s.truth.n} stations`);
+    if (s.truth.verdict === 'agree' || s.truth.verdict === 'weak') assert.ok(s.truth.n >= 1 && Number.isFinite(s.truth.misfit), `${s.id} has a verdict without numbers`);
+    if (s.truth.verdict === 'none' && s.tier === 'measured') assert.equal(s.truth.n, 0);
+  }
+  const c = val.truth.counts;
+  assert.equal(c.validated + c.agree + c.weak + c.none, sites.length);
+});

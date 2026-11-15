@@ -1,1 +1,1 @@
-{"reference":[]}
+{"reference":[],"gps":[{"name":"KYTF","lon":-84.5769,"lat":39.0447,"gps":-0.37,"radar":-1.07,"note":"GPS vertical rate over 8.2 years of the radar period; radar converted from line of sight (approximate)."},{"name":"OHGB","lon":-84.6755,"lat":39.2145,"gps":0.05,"radar":-1.5,"note":"GPS vertical rate over 7.0 years of the radar period; radar converted from line of sight (approximate)."}]}

@@ -73,6 +73,12 @@ function renderCharts(V) {
   const ni = V.mexico_nisar;
   charts.densityChart(card(root, '', 'Mexico City: one year of NISAR against ten of Sentinel-1', `${f0(ni.n)} pixels of 80 m. ${ni.note}`, `r = ${ni.r.toFixed(2)} · slope ${ni.slope.toFixed(2)} · spread ${ni.rmsd.toFixed(0)} mm/yr`), ni, { xl: 'Sentinel-1 rate 2016 to 2026, mm/yr', yl: 'NISAR rate 2025 to 2026, mm/yr' });
 
+  const tr = V.truth;
+  if (tr && tr.stations && tr.stations.length > 10) {
+    const st3 = tr.stations.filter((r) => r.n >= 3);
+    charts.scatterChart(card(root, 'full', `Every place against GPS: ${st3.length} stations at ${tr.stats.places} places`, `${tr.note} Places with one or two stations are left off this chart because their offset cannot be separated. Of ${tr.counts.agree + tr.counts.weak} places with a station: ${tr.counts.agree} agree, ${tr.counts.weak} agree only weakly (${tr.thin} of them rest on one or two stations). ${tr.counts.none} places have nothing to check against.`, tr.stats.r != null ? `r = ${tr.stats.r.toFixed(2)} · typical difference ${tr.stats.median_abs} mm/yr · ${tr.tied} maps tied to GPS` : ''),
+      st3.map((r) => ({ x: r.gps, y: r.radar, name: `${r.name}, ${r.place}`, tip: `GPS ${r.gps.toFixed(1)} mm/yr<br>radar ${r.radar.toFixed(1)} mm/yr` })), { xl: 'GPS vertical rate, mm/yr', yl: 'radar rate, mm/yr', height: 320 });
+  }
   const ns = V.nisar_sites || [];
   if (ns.length > 3) {
     const cnt = (k) => ns.filter((r) => r.verdict === k).length;
@@ -102,6 +108,7 @@ function renderTests(V) {
     ['Willcox: NISAR against Sentinel-1', 'loose: r = 0.51 between rate maps, 3 to 19 mm of noise per pair, often no data at the fastest spot', 'bad', 'weak'],
     ...((V.nisar_sites || []).length > 3 ? [[`NISAR against Sentinel-1 at ${V.nisar_sites.length} places`, (() => { const c = (k) => V.nisar_sites.filter((r) => r.verdict === k).length; return `agrees (r 0.75 or more) at ${c('strong')}, loosely at ${c('moderate')}, not yet at ${c('weak')}; at ${c('quiet')} the ground moves too little for a comparison to mean anything`; })(), '', 'mixed, as expected']] : []),
     ['"NISAR sees farm fields where Sentinel-1 is blind"', 'dropped: 92% of Sentinel-1 pixels pass the quality mask at Willcox', 'bad', 'dropped'],
+    ...(V.truth ? [[`Every other place against GPS stations inside its window`, `${V.truth.counts.agree} agree, ${V.truth.counts.weak} agree only weakly, ${V.truth.counts.none} have no station to check against; ${V.truth.thin} of the checks rest on one or two stations${V.truth.stats.r != null ? `; across ${V.truth.stats.n} stations at places with three or more, r = ${V.truth.stats.r.toFixed(2)}` : ''}`, V.truth.counts.weak ? '' : 'ok', 'mixed, shown per place']] : []),
     ['Phoenix: radar against survey benchmarks', `rank correlation ${V.phoenix_benchmarks.spearman.toFixed(2)} on ${V.phoenix_benchmarks.n}; radar sizes are 30 to 60% of the multi-decade survey averages`, 'ok', 'ranking only'],
     ['Chennai: can NISAR see the published sinking?', `not yet: detectable from about ${V.chennai.noise[0].mdr_now.toFixed(0)} mm/yr, published rates are 15 to 32`, 'bad', 'not detectable'],
     ['A fixed damage threshold (the 1/500 building limit)', 'dropped: at pixel scale it would take decades to reach, so it flags nothing or noise. The score is relative only', 'bad', 'dropped'],
@@ -131,7 +138,7 @@ function renderMethod() {
     <li>Anything narrower than a pixel. A fissure is a crack a few metres wide; we flag the strain field around it.</li>
     <li>Sideways motion. Rates assume the ground moves straight down. Phoenix is reported along the radar's line of sight.</li>
     <li>Ground with no good radar signal: irrigated fields, water, steep slopes. Those pieces are listed as not observed.</li>
-    <li>Whether the bedrock reference points, chosen by hand, are truly still. At the places marked "not ground-checked" there is no bedrock point at all: rates are tied to the steadiest ground in the window, and nothing on the ground has confirmed them.</li>
+    <li>Whether the bedrock reference points, chosen by hand, are truly still. At the places added by script there is no bedrock point at all. Where three or more GPS stations agree the map is tied to them; elsewhere rates are relative to the steadiest ground in the window, so a window that is sinking as a whole reads too slow.</li>
     <li>Why GPS station MXTM disagrees by about 50 mm a year.</li>
     <li>Extreme unevenness values in built-up cells can be noise. Use them to rank, not as measurements.</li></ul></div>
   <div class="card"><h3>What it does not claim</h3><ul>

@@ -1,1 +1,1 @@
-{"reference":[]}
+{"reference":[],"gps":[{"name":"TXOE","lon":-102.314,"lat":31.8735,"gps":1.47,"radar":0.6,"note":"GPS vertical rate over 9.5 years of the radar period; radar converted from line of sight (approximate)."},{"name":"TXM5","lon":-102.1413,"lat":31.9521,"gps":-3.32,"radar":-4.08,"note":"GPS vertical rate over 9.5 years of the radar period; radar converted from line of sight (approximate)."}]}

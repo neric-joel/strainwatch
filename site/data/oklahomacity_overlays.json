@@ -1,1 +1,1 @@
-{"reference":[]}
+{"reference":[],"gps":[{"name":"OKDT","lon":-97.5077,"lat":35.4901,"gps":0.88,"radar":-1.2,"note":"GPS vertical rate over 9.4 years of the radar period; radar converted from line of sight (approximate)."},{"name":"OKOC","lon":-97.5934,"lat":35.4659,"gps":-0.26,"radar":-0.35,"note":"GPS vertical rate over 6.1 years of the radar period; radar converted from line of sight (approximate)."}]}

@@ -1,1 +1,1 @@
-{"reference":[]}
+{"reference":[],"gps":[{"name":"RILN","lon":-71.4607,"lat":41.9369,"gps":-0.2,"radar":0.32,"note":"GPS vertical rate over 8.3 years of the radar period; radar converted from line of sight (approximate)."},{"name":"NBC1","lon":-71.3912,"lat":41.7937,"gps":-1.47,"radar":-0.67,"note":"GPS vertical rate over 5.2 years of the radar period; radar converted from line of sight (approximate)."}]}

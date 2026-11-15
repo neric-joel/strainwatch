@@ -271,15 +271,15 @@ function drawPoints(kind) {
   clearMarkers(S.markers);
   const c = S.cur, ov = c.overlays;
   const add = (lon, lat, color, html) => {
-    const d = el('div', { class: 'ptmark', style: `background:${color}` });
+    const d = el('div', { class: 'ptmark', style: `color:${color}` });
     const m = new maplibregl.Marker({ element: d }).setLngLat([lon, lat]).setPopup(new maplibregl.Popup({ offset: 10, closeButton: false }).setHTML(html)).addTo(map);
     S.markers.push(m);
   };
   if (kind === 'benchmarks') (ov.benchmarks || []).forEach((b) => add(b.lon, b.lat, Math.abs(b.radar - b.bm) < Math.max(8, Math.abs(b.bm) * 0.3) ? '#147d6c' : '#d9a441',
     `<b>Benchmark ${esc(b.name)}</b><br>Survey ${b.first} to ${b.last}: <b>${b.bm.toFixed(1)} mm/yr</b><br>Radar 2016 to 2026: <b>${b.radar.toFixed(1)} mm/yr</b><br><span class="m">Green: within 30%. Amber: survey average covers older, slower decades or the two differ.</span>`));
-  if (kind === 'gps') (ov.gps || []).forEach((g) => add(g.lon, g.lat, g.gps == null ? '#9a958a' : Math.abs(g.radar - g.gps) < 20 ? '#147d6c' : '#d9a441',
-    `<b>GPS ${esc(g.name)}</b><br>${g.gps == null ? 'No GPS rate in the test window' : `GPS: <b>${g.gps.toFixed(1)} mm/yr</b>`}<br>Radar: <b>${g.radar.toFixed(1)} mm/yr</b><br><span class="m">Both along the radar line of sight, Dec 2017 to Mar 2019.</span>`));
-  if (kind === 'chennai') (ov.points || []).forEach((p) => add(p.lon, p.lat, p.kind === 'stable' ? '#6f6b62' : '#8f7fb0',
+  if (kind === 'gps') (ov.gps || []).forEach((g) => add(g.lon, g.lat, g.gps == null || g.radar == null ? '#9a958a' : Math.abs(g.radar - g.gps) < (g.note ? Math.max(3, 0.25 * Math.abs(g.gps)) : 20) ? '#147d6c' : '#d9a441',
+    `<b>GPS ${esc(g.name)}</b><br>${g.gps == null ? 'No GPS rate in the test window' : `GPS: <b>${g.gps.toFixed(1)} mm/yr</b>`}<br>Radar: <b>${g.radar == null ? 'no data here' : g.radar.toFixed(1) + ' mm/yr'}</b><br><span class="m">${esc(g.note || 'Both along the radar line of sight, Dec 2017 to Mar 2019.')}</span>`));
+  if (kind === 'chennai') (ov.points || []).forEach((p) => add(p.lon, p.lat, p.kind === 'stable' ? '#8a8578' : '#8f7fb0',
     `<b>${esc(p.name)}</b><br>${p.kind === 'stable' ? 'Presumed-stable reference point' : 'Published hotspot'}<br>3.5-month change: <b>${p.cum} mm</b> (noise ±${p.sigma} mm)<br><span class="m">${Math.abs(p.snr) < 2 ? 'Inside the noise.' : 'Above 2 sigma on this track, but not specific to this spot.'}</span>`));
 }
 
@@ -443,7 +443,7 @@ function renderLegend() {
 }
 
 // ------------------------------------------------------------------ header
-const TIERS = [['checked', 'Checked against ground truth'], ['measured', 'Measured, not ground-checked'], ['frontier', 'NISAR only: the clock has just started']];
+const TIERS = [['checked', 'Checked in depth against ground truth'], ['measured', 'Added by script: checked against GPS where stations exist'], ['frontier', 'NISAR only: the clock has just started']];
 function renderTabs() {
   const t = $('#siteTabs'); t.innerHTML = '';
   const all = el('button', { 'aria-pressed': String(!S.cur) }, 'All places'); all.onclick = () => goWorld(); t.appendChild(all);
@@ -459,8 +459,12 @@ function renderTabs() {
 }
 function renderTally() {
   const c = S.cur, t = $('#tally');
-  if (!c) { const n = (k) => S.sites.filter((s) => s.tier === k).length; t.innerHTML = `<div class="bar"><i style="width:${(n('checked') / S.sites.length) * 100}%;background:#147d6c"></i><i style="width:${(n('measured') / S.sites.length) * 100}%;background:#1c1b19"></i><i style="width:${(n('frontier') / S.sites.length) * 100}%;background:#8f7fb0"></i></div><div class="cap"><span><b>${n('checked')}</b> places checked against ground truth</span><span><b>${n('measured')}</b> measured, not checked</span><span><b>${n('frontier')}</b> NISAR only</span></div>`; return; }
-  if (!c.segs.length) { t.innerHTML = `<div class="cap"><span><b>${c.site.name}</b> · ${c.site.role}</span><span>No ranking: record too short</span></div>`; return; }
+  if (!c) {
+    const w = (k) => (truthCount(k) / S.sites.length) * 100;
+    t.innerHTML = `<div class="bar">${['validated', 'agree', 'weak', 'none', 'frontier'].map((k) => `<i style="width:${w(k)}%;background:${TRUTH_COL[k]}"></i>`).join('')}</div><div class="cap"><span><b>${truthCount('validated') + truthCount('agree')}</b> places agree with ground truth</span><span><b>${truthCount('weak')}</b> weak</span><span><b>${truthCount('none')}</b> nothing to check against</span></div>`;
+    return;
+  }
+  if (!c.segs.length) { t.innerHTML = `<div class="cap"><span><b>${c.site.name}</b> · ${roleLabel(c.site)}</span><span>No ranking: record too short</span></div>`; return; }
   const s = summarize(c.segs.filter((x) => S.filter.groups.has(x.g)));
   const w = (k) => (s.km ? (s[k].km / s.km) * 100 : 0);
   t.innerHTML = `<div class="bar" title="Share of line length by class"><i style="width:${w('first')}%;background:${CLS_COL.first}"></i><i style="width:${w('watch')}%;background:#d9a441"></i><i style="width:${w('routine')}%;background:#cfcabd"></i><i style="width:${w('nodata')}%;background:repeating-linear-gradient(45deg,#a9a59b 0 2px,#e9e5da 2px 5px)"></i></div>
@@ -482,7 +486,7 @@ function renderList() {
   const fsum = summarize(c.segs.filter((s) => S.filter.groups.has(s.g)));
   const weak = isWeak(c.site);
   p.innerHTML = `<h2>${weak ? 'Nothing stands out here' : `${f0(fsum.n)} pieces of line, ranked`}</h2>
-    <p class="lede">${esc(c.site.name)}: ${esc(c.site.role.toLowerCase())}. ${weak ? `The ground here sinks slowly and evenly as far as the radar can tell, so the ${f0(fsum.n)} pieces below are in order but <b>none is flagged</b>. Treat it as a clean bill for now, not a work list.` : `Each piece is about 300 m, in order of how unevenly the ground beneath it is sinking (not how fast). <b>${S.role ? ROLES.find((r) => r.id === S.role).who + ': ' : ''}${f0(fsum.first.km)} km to look at first, out of ${f0(fsum.km)} km${S.filter.groups.size < groups.length ? ' of your lines' : ''}.</b>`}</p>
+    <p class="lede">${esc(c.site.name)}: ${esc(roleLabel(c.site).replace(/^M/, 'm'))}. ${weak ? `The ground here sinks slowly and evenly as far as the radar can tell, so the ${f0(fsum.n)} pieces below are in order but <b>none is flagged</b>. Treat it as a clean bill for now, not a work list.` : `Each piece is about 300 m, in order of how unevenly the ground beneath it is sinking (not how fast). <b>${S.role ? ROLES.find((r) => r.id === S.role).who + ': ' : ''}${f0(fsum.first.km)} km to look at first, out of ${f0(fsum.km)} km${S.filter.groups.size < groups.length ? ' of your lines' : ''}.</b>`}</p>
     ${siteCaveat(c)}
     <div class="kicker" style="margin-top:4px">I look after</div>
     <div class="chips" id="rchips">${ROLES.map((r) => `<button data-role="${r.id}" aria-pressed="${S.role === r.id}" title="${r.q}">${r.id === 'roads' ? 'Roads' : r.id === 'lines' ? 'Pipelines, canals, rail, power' : 'Fissure mapping'}</button>`).join('')}</div>
@@ -491,9 +495,11 @@ function renderList() {
     <div class="chips" id="cchips">${[['all', 'All'], ['first', weak ? 'Highest here' : 'Inspect first'], ['watch', 'Watch'], ['nodata', 'Not observed']].map(([k, l]) => `<button data-c="${k}" aria-pressed="${S.filter.cls === k && !S.filter.odd}">${l}</button>`).join('')}<button data-odd="1" aria-pressed="${S.filter.odd}" title="Top 5% for unevenness, but outside the fastest-sinking 20% of pieces. A ranking by sinking speed alone would leave these in the routine pile.">Uneven, not fast</button></div>
     <div id="rows"></div>
     <div style="height:14px"></div>
+    ${truthCard(c)}
     ${nisarCard(c)}
     <div class="meta">Data behind this place: ${c.site.sensor} · radar ${c.site.layers.rate.period} · rates are ${c.site.rate_kind} · <a href="#sec-method">How it works</a></div>`;
   wireRoles(p);
+  if ($('#gpsShow')) $('#gpsShow').onclick = () => { S.show.points = 'gps'; renderMapbar(); drawVectors(); p.scrollTop = 0; toast('GPS stations are on the map. Click a dot to compare GPS with the radar there.'); };
   if ($('#nisCmp')) { $('#nisCmp').onclick = () => setCompare(['rate', 'nisar']); $('#nisOnly').onclick = () => setLayer('nisar'); }
   $('#taPlan').onclick = () => { S.view = 'planner'; S.planOpts.groups = new Set(S.filter.groups); renderAll(); runPlan(); };
   $('#taGis').onclick = () => download(`strainwatch_${c.site.id}_ranked.geojson`, toGeoJSON(vis, c.site), 'application/geo+json');
@@ -791,6 +797,37 @@ function noFrameMsg(p) {
     : '<b>No data here yet. That does not mean it is safe.</b> Outside North and Central America there is no ready-made radar history; StrainWatch has only the newer NISAR satellite, whose record is about a year old. The Chennai panel shows what that allows today.';
 }
 
+// ---- ground truth, per place: validated in depth / GPS agrees / GPS weak / nothing to check against
+const TRUTH_COL = { validated: '#147d6c', agree: '#2f9c86', weak: '#c9701f', none: '#8a8578', frontier: '#8f7fb0' };
+const ROLE_WORD = { agree: 'Measured, agrees with GPS', weak: 'Measured, agrees only weakly with GPS', none: 'Measured, nothing on the ground to check against' };
+const roleLabel = (s) => (s.tier === 'measured' ? ROLE_WORD[truthV(s)] || s.role : s.role);
+const TRUTH_WORD = { validated: 'checked in depth', agree: 'GPS agrees', weak: 'GPS: weak agreement', none: 'not checked against ground truth', frontier: 'NISAR only' };
+const truthV = (s) => (s.frontier ? 'frontier' : (s.truth && s.truth.verdict) || 'none');
+const truthCount = (k) => S.sites.filter((s) => truthV(s) === k).length;
+
+function truthLine(s) {
+  const t = s.truth || {}, v = truthV(s);
+  if (v === 'validated') return `<b>Checked in depth against ground truth.</b> ${esc(t.note || '')}.`;
+  if (v === 'frontier') return '';
+  if (v === 'none') return '<b>Not checked against ground truth.</b> No GPS station with enough data lies inside this window, so this place is satellite only. Rates are relative to the steadiest ground in the window and may understate sinking where the whole window is going down. The unevenness score does not depend on that.';
+  const thin = t.n < 3 ? ` Only ${t.n} station${t.n === 1 ? '' : 's'}, so this is a thin check.` : '';
+  const tied = t.tied ? ` The map is tied to those stations: before the tie the radar's relative rates read ${f1(Math.abs(t.offset))} mm/yr ${t.offset > 0 ? 'slower' : 'faster'} than GPS.` : '';
+  if (v === 'agree') return `<b>Checked against GPS: agrees.</b> ${t.n} station${t.n === 1 ? '' : 's'} inside this window; typical difference ${f1(t.misfit)} mm/yr${t.r != null ? `, r = ${t.r.toFixed(2)}` : ''}.${tied}${thin}`;
+  return `<b>Checked against GPS: weak agreement.</b> ${t.n} station${t.n === 1 ? '' : 's'} inside this window; typical difference ${f1(t.misfit)} mm/yr against a fastest GPS rate of ${f1(t.gps_fastest)}. Treat the rates here with caution.${t.n < 3 ? ` With only ${t.n} station${t.n === 1 ? '' : 's'} the gap may be the radar's relative reference (it measures against the steadiest ground in the window) and not an error, but that cannot be told apart here.` : ''}`;
+}
+
+function truthCard(c) {
+  const t = c.site.truth || {}, v = truthV(c.site);
+  if (v === 'validated' || v === 'frontier') return '';
+  const sv = t.survey && t.survey.spearman != null ? `<p><b>Arizona survey benchmarks:</b> ${t.survey.n} benchmarks, rank correlation ${t.survey.spearman.toFixed(2)} (${t.survey.spearman >= 0.7 ? 'agrees' : t.survey.spearman >= 0.4 ? 'agrees loosely' : 'weak'}). They average decades, so only the ranking is compared.</p>` : '';
+  if (v === 'none') return `<div class="card truth"><h3>Ground truth here <span class="src">nothing to check against</span></h3><p>No GPS station with at least 2.5 years of data inside the radar period lies in this window${t.n_found ? ' on ground the radar could read' : ''}. Nothing on the ground has confirmed these numbers.</p>${sv}</div>`;
+  const rows = (t.stations || []).map((g) => `<tr><td>${esc(g.name)} <span style="color:var(--muted)">${g.years} yr</span></td><td>GPS ${f1(g.gps)} · radar ${g.radar == null ? 'no data' : f1(g.radar)}</td></tr>`).join('');
+  return `<div class="card truth"><h3>Ground truth here <span class="src">${t.n} GPS station${t.n === 1 ? '' : 's'} · ${v === 'agree' ? 'agrees' : 'weak agreement'}</span></h3>
+    <p>${truthLine(c.site)}</p><table class="kv">${rows}</table>
+    ${sv}<div class="btnrow"><button class="btn ghost" id="gpsShow">Show the GPS stations on the map</button></div>
+    <p class="fine">Vertical rates in mm/yr over the radar period. GPS: Nevada Geodetic Laboratory. Radar is converted from line of sight with one angle, good to about 12%.</p></div>`;
+}
+
 const DOT_VIEWS = [['tier', 'Trust level'], ['speed', 'Sinking speed'], ['uneven', 'Unevenness'], ['observed', 'Ground observed'], ['nisar', 'NISAR agreement']];
 const NISAR_COL = { strong: '#147d6c', moderate: '#d9a441', weak: '#b5452f', quiet: '#9aa0a6', frontier: '#8f7fb0', none: '#ffffff' };
 const NISAR_WORD = { strong: 'NISAR agrees with Sentinel-1', moderate: 'NISAR agrees loosely', weak: 'NISAR does not agree yet', quiet: 'too quiet to compare', frontier: 'NISAR only: not detectable yet', none: 'NISAR not processed yet' };
@@ -805,7 +842,7 @@ function dotColor(s) {
   if (by === 'speed') return stepCol(-s.summary.fast_mmyr, OV_BREAKS, ['#fbf3e8', ...RATE_COLS]);
   if (by === 'uneven') return stepCol(s.uneven_q[190], UN_BREAKS, ['#f1f4f9', ...UN_COLS]);
   if (by === 'observed') return stepCol(s.summary.valid_share, OBS_BREAKS, OBS_COLS);
-  return s.tier === 'checked' ? '#147d6c' : '#1c1b19';
+  return TRUTH_COL[truthV(s)];
 }
 
 function siteStat(s) {
@@ -819,13 +856,14 @@ function siteStat(s) {
 function worldLegend() {
   const ramp = (cols, ticks) => `<div class="ramp">${cols.map((x) => `<i style="background:${x}"></i>`).join('')}</div><div class="ticks">${ticks.map((v) => `<span>${v}</span>`).join('')}</div>`;
   const key = (col, text) => `<span><i class="dotkey" style="background:${col}"></i>${text}</span>`;
+  const tkey = (v, text) => `<span><i class="dotkey" style="background:${v === 'validated' ? TRUTH_COL[v] : '#fff'};border:2px ${v === 'none' ? 'dashed' : 'solid'} ${TRUTH_COL[v]}"></i>${text}</span>`;
   let h;
-  if (S.dotBy === 'speed') h = `<b>Dots: fastest ground at each place · mm/yr</b>${ramp(['#fbf3e8', ...RATE_COLS], ['0', ...OV_BREAKS])}`;
-  else if (S.dotBy === 'uneven') h = `<b>Dots: where the top 5% of unevenness starts · mm/yr per km</b>${ramp(['#f1f4f9', ...UN_COLS], ['0', ...UN_BREAKS])}<div class="note">Low values mean nothing stands out there.</div>`;
-  else if (S.dotBy === 'observed') h = `<b>Dots: share of the ground the radar could read</b>${ramp(OBS_COLS, ['0', '25%', '50%', '75%', '90%'])}<div class="note">Grey places are mostly farm fields, forest or water for Sentinel-1.</div>`;
-  else if (S.dotBy === 'nisar') h = `<b>Dots: does a year of NISAR match Sentinel-1?</b><div class="keys" style="grid-template-columns:1fr">${key(NISAR_COL.strong, 'Agrees (r 0.75 or more)')}${key(NISAR_COL.moderate, 'Agrees loosely')}${key(NISAR_COL.weak, 'Does not agree yet')}${key(NISAR_COL.quiet, 'Ground too quiet to compare')}${key(NISAR_COL.frontier, 'NISAR is the only source')}${key(NISAR_COL.none, 'Not processed yet')}</div>`;
-  else h = `<b>Dots: how far each place is proven</b><div class="keys" style="grid-template-columns:1fr">${key('#147d6c', 'Checked against surveys or GPS')}${key('#1c1b19', 'Measured, not ground-checked')}${key('#8f7fb0', 'NISAR only: not detectable yet')}</div>`;
-  return h + '<div class="note">Bigger dot = faster sinking. Tinted states have at least one processed place; click a state name to list them. Dashed boxes are the processed windows. Everywhere else is <b style="display:inline">not processed yet</b>, which is not the same as stable.</div>';
+  if (S.dotBy === 'speed') h = `<b>Markers: fastest ground at each place · mm/yr</b>${ramp(['#fbf3e8', ...RATE_COLS], ['0', ...OV_BREAKS])}`;
+  else if (S.dotBy === 'uneven') h = `<b>Markers: where the top 5% of unevenness starts · mm/yr per km</b>${ramp(['#f1f4f9', ...UN_COLS], ['0', ...UN_BREAKS])}<div class="note">Low values mean nothing stands out there.</div>`;
+  else if (S.dotBy === 'observed') h = `<b>Markers: share of the ground the radar could read</b>${ramp(OBS_COLS, ['0', '25%', '50%', '75%', '90%'])}<div class="note">Grey places are mostly farm fields, forest or water for Sentinel-1.</div>`;
+  else if (S.dotBy === 'nisar') h = `<b>Markers: does a year of NISAR match Sentinel-1?</b><div class="keys" style="grid-template-columns:1fr">${key(NISAR_COL.strong, 'Agrees (r 0.75 or more)')}${key(NISAR_COL.moderate, 'Agrees loosely')}${key(NISAR_COL.weak, 'Does not agree yet')}${key(NISAR_COL.quiet, 'Ground too quiet to compare')}${key(NISAR_COL.frontier, 'NISAR is the only source')}${key(NISAR_COL.none, 'Not processed yet')}</div>`;
+  else h = `<b>Markers: how far each place is proven</b><div class="keys" style="grid-template-columns:1fr">${tkey('validated', `Checked in depth (${truthCount('validated')})`)}${tkey('agree', `Checked against GPS: agrees (${truthCount('agree')})`)}${tkey('weak', `Checked against GPS: weak (${truthCount('weak')})`)}${tkey('none', `Nothing to check against (${truthCount('none')})`)}${tkey('frontier', 'NISAR only: not detectable yet')}</div>`;
+  return h + '<div class="note">Bigger square = faster sinking. Tinted states have at least one processed place; click a state name to list them. Dashed boxes are the processed windows. Everywhere else is <b style="display:inline">not processed yet</b>, which is not the same as stable.</div>';
 }
 
 const isWeak = (s) => !!(s.uneven_q && s.uneven_q[190] < 5);
@@ -833,7 +871,7 @@ const clsLabel = (cls) => (cls === 'first' && S.cur && isWeak(S.cur.site) ? 'Hig
 
 function siteCaveat(c) {
   const s = c.site, out = [];
-  if (s.tier === 'measured') out.push('<b>Satellite only: nobody has checked this place on the ground yet.</b> No survey benchmarks, GPS or fissure tests stand behind it here. Rates are relative to the steadiest ground in the window, not to bedrock, so where the whole window is sinking they understate it. The unevenness score does not depend on that reference.');
+  if (s.tier === 'measured') out.push(truthLine(s));
   if (s.summary.valid_share < 0.5) out.push(`<b>Mostly unobserved.</b> Only ${Math.round(s.summary.valid_share * 100)}% of this window kept a usable Sentinel-1 signal; farm fields, forest and water lose it. Most lines here are listed as not observed.`);
   if (s.uneven_q && s.uneven_q[190] < 5) out.push(`<b>Very weak signal.</b> The top 5% starts at only ${f1(s.uneven_q[190])} mm/yr per km here (44 at Willcox). At this level the order is close to radar noise: read this place as "nothing stands out", not as a work list.`);
   else if (s.uneven_q && s.uneven_q[190] < 10) out.push(`<b>Weak signal.</b> The top 5% starts at only ${f1(s.uneven_q[190])} mm/yr per km here (44 at Willcox). Read the order as a relative rank; it has not been tested against fissures at this place.`);
@@ -865,7 +903,7 @@ function nisarCard(c) {
 function buildSiteMarks() {
   S.sites.forEach((s, i) => {
     const pos = { phoenix_west: 'left up', phoenix_east: 'up', pinal: 'left down', willcox: 'down', mexico: 'left' }[s.id] ?? ['', 'left', 'up', 'left down'][i % 4];
-    const dot = s.frontier ? 13 : Math.round(Math.max(10, Math.min(24, 7 + 1.7 * Math.sqrt(-s.summary.fast_mmyr)))); // bigger dot = faster sinking
+    const dot = s.frontier ? 12 : Math.round(Math.max(9, Math.min(20, 6 + 1.4 * Math.sqrt(-s.summary.fast_mmyr)))); // bigger dot = faster sinking
     const d = el('div', { class: `sitemark t-${s.tier} ${pos}` }, `<i style="width:${dot}px;height:${dot}px"></i><span></span>`);
     d.onclick = (e) => { e.stopPropagation(); if (S.mode === 'story') enterExplore(s.id); else setSite(s.id); };
     siteMarks.push({ s, d, m: new maplibregl.Marker({ element: d, anchor: 'center' }).setLngLat(s.center).addTo(map) });
@@ -903,9 +941,9 @@ function pickState(p, f) {
 
 function paintSiteMarks() {
   siteMarks.forEach(({ s, d }) => {
-    const i = d.querySelector('i');
-    i.style.background = dotColor(s);
-    i.style.borderColor = S.dotBy === 'nisar' && nisV(s) === 'none' ? '#1c1b19' : '#fff';
+    const i = d.querySelector('i'), col = dotColor(s), v = truthV(s);
+    if (S.dotBy === 'tier') { i.style.background = v === 'validated' ? col : '#fff'; i.style.borderColor = col; i.style.borderStyle = v === 'none' ? 'dashed' : 'solid'; }
+    else { i.style.background = col; i.style.borderColor = '#57534a'; i.style.borderStyle = 'solid'; }
     d.title = `${s.name}: ${siteStat(s)}`;
     d.querySelector('span').innerHTML = `<b>${esc(s.name)}</b>${esc(siteStat(s))}`;
   });
@@ -1012,7 +1050,8 @@ function renderWorld() {
   p.innerHTML = `<div class="kicker teal" style="margin-top:0">Who uses this</div><h2>For whoever decides where the field crew goes first</h2>
     <p class="lede">Pick the job that is closest to yours. It opens the validated Willcox Basin with your lines and your question.</p>${roleCards()}
     <h2 style="margin-top:20px">${S.sites.length} places, one method</h2>
-    <p class="lede"><b>${cov.us_places ?? ''} US places in ${cov.us_states ?? ''} of the lower-48 states${cov.dc ? ' and Washington DC' : ''}</b>, plus Mexico and India. Zoom into any dot, or pick one below. The dashed boxes are the windows that have been processed: together about ${cov.us_share != null ? (cov.us_share * 100).toFixed(1) : '?'}% of the lower-48 land area. <b>Everywhere else is not processed yet</b>, which is not the same as stable.</p>
+    <p class="lede"><b>${cov.us_places ?? ''} US places in ${cov.us_states ?? ''} of the lower-48 states${cov.dc ? ' and Washington DC' : ''}</b>, plus Mexico and India. Zoom into any marker, or pick one below. The dashed boxes are the windows that have been processed: together about ${cov.us_share != null ? (cov.us_share * 100).toFixed(1) : '?'}% of the lower-48 land area. <b>Everywhere else is not processed yet</b>, which is not the same as stable.</p>
+    <p class="lede"><b>Every place was checked against independent ground measurements where any exist:</b> ${truthCount('validated')} in depth, ${truthCount('agree')} agree with GPS stations inside the window, ${truthCount('weak')} agree only weakly, and ${truthCount('none')} have nothing to check against. Each place says which.</p>
     <div class="kicker">Different views of the map</div>
     <div class="chips" id="dotby">${DOT_VIEWS.map(([k, l]) => `<button data-k="${k}" aria-pressed="${S.dotBy === k}">${l}</button>`).join('')}</div>
     <input id="placeQ" type="search" placeholder="Find a place or a state" value="${esc(S.placeQ)}" autocomplete="off">
@@ -1020,9 +1059,9 @@ function renderWorld() {
     ${exposureCard()}
     <div class="card nisar" style="margin-top:6px"><h3>What NISAR does here</h3>
       <p>The ten-year history is Sentinel-1. <b>NISAR</b>, the NASA-ISRO L-band radar flying since 2025, has two jobs: it <b>can carry the watch forward</b> once the Sentinel-1 record ends (shown here on one year of data, not yet a live service), and it is <b>the only source in most of the world</b>. Its strongest result here: at Mexico City one year of NISAR matches ten years of Sentinel-1 at r = 0.94, and reads −279 mm/yr where GPS says −262 to −268.</p>
-      <p>${nisarSummary()}</p><p>NISAR pairs from the past year are stacked at <b>${S.sites.length - nc('none') - nc('frontier')} places</b>, plus Chennai. Of the ${nc('strong') + nc('moderate') + nc('weak')} that move enough to compare, NISAR agrees with Sentinel-1 at ${nc('strong')}, loosely at ${nc('moderate')}, not yet at ${nc('weak')}; at ${nc('quiet')} the ground is too quiet to tell${nc('none') ? `, and ${nc('none')} are not processed yet` : ''}. <button class="linkbtn" id="seeNisar">Colour the map by NISAR agreement</button></p></div>
+      <p>${nisarSummary()}</p><p>NISAR pairs from the past year are stacked at <b>${S.sites.length - nc('none') - nc('frontier')} places</b>, plus Chennai. Of the ${nc('strong') + nc('moderate') + nc('weak')} that move enough to compare, NISAR agrees with Sentinel-1 at ${nc('strong')}, loosely at ${nc('moderate')}, not yet at ${nc('weak')}; at ${nc('quiet')} the ground is too quiet to tell${nc('none') ? `, and ${nc('none')} are not processed yet` : ''}. <button class="linkbtn" id="seeNisar">Colour the markers by NISAR agreement</button></p></div>
     <div class="card" style="margin-top:14px"><h3>Everywhere else</h3>
-      <p><b>North and Central America.</b> NASA's OPERA project publishes the Sentinel-1 displacement history used here. Any window can be packed with one script in a few minutes; every place marked "not ground-checked" was added that way.</p>
+      <p><b>North and Central America.</b> NASA's OPERA project publishes the Sentinel-1 displacement history used here. Any window can be packed with one script in a few minutes; every place outside the three checked in depth was added that way, then compared with GPS.</p>
       <p><b>The rest of the world.</b> There is no ready-made history. NISAR is the source, and its record is about a year old. StrainWatch reports how long until a given sinking rate becomes detectable: see Chennai.</p>
       <p class="fine">Click or draw anywhere without a packed window and the app says so. It never shows unmeasured ground as stable.</p></div>`;
   wireRoles(p);
@@ -1040,7 +1079,7 @@ function renderWorld() {
       list.forEach((s) => {
         const big = s.frontier ? 'Not yet' : S.dotBy === 'uneven' ? f1(s.uneven_q[190]) : S.dotBy === 'observed' ? Math.round(s.summary.valid_share * 100) + '%' : S.dotBy === 'nisar' ? (s.nisar && s.nisar.r != null ? s.nisar.r.toFixed(2) : '–') : f0(-s.summary.fast_mmyr);
         const small = s.frontier ? 'detectable' : S.dotBy === 'uneven' ? 'mm/yr per km, top 5%' : S.dotBy === 'observed' ? 'of ground observed' : S.dotBy === 'nisar' ? NISAR_WORD[nisV(s)].replace('NISAR ', '') : 'mm/yr, fastest ground';
-        const b = el('button', { class: 'row' }, `<span class="rk"><i class="dotkey" style="background:${dotColor(s)}"></i></span><span><span class="nm">${esc(s.name)}</span><span class="sb">${esc(s.region)}${s.check ? ' · ' + esc(s.check) : ''}</span></span><span class="vd ${s.frontier ? 'c-nodata' : ''}">${big}<small>${small}</small></span>`);
+        const b = el('button', { class: 'row' }, `<span class="rk"><i class="dotkey" style="background:${dotColor(s)}"></i></span><span><span class="nm">${esc(s.name)}</span><span class="sb">${esc(s.region)}${s.check ? ' · ' + esc(s.check) : ''}${s.tier === 'measured' ? ` · <span style="color:${truthV(s) === 'weak' ? 'var(--bad)' : truthV(s) === 'agree' ? 'var(--teal-d)' : 'var(--muted)'};font-weight:600">${TRUTH_WORD[truthV(s)]}${s.truth && s.truth.n ? ` (${s.truth.n})` : ''}</span>` : ''}</span></span><span class="vd ${s.frontier ? 'c-nodata' : ''}">${big}<small>${small}</small></span>`);
         b.onclick = () => setSite(s.id);
         rows.appendChild(b);
       });
@@ -1074,7 +1113,7 @@ function storyCtx() {
   const V = S.val;
   const bmRow = (n) => V.willcox_benchmarks.rows.find((r) => r.name === n);
   return {
-    val: V, exposure: S.exposure, nisarSummary, nisarPlaces: () => S.sites.filter((x) => !['none', 'frontier'].includes(nisV(x))).length, site: (id) => S.sites.find((s) => s.id === id), sites: S.sites, coverage: S.coverage || {}, nisarCount: (k) => S.sites.filter((x) => nisV(x) === k).length,
+    val: V, exposure: S.exposure, truthCount, nisarSummary, nisarPlaces: () => S.sites.filter((x) => !['none', 'frontier'].includes(nisV(x))).length, site: (id) => S.sites.find((s) => s.id === id), sites: S.sites, coverage: S.coverage || {}, nisarCount: (k) => S.sites.filter((x) => nisV(x) === k).length,
     groupSum: (id, g) => summarize(S.cache.get(id).segs.filter((s) => s.g === g)),
     roles: ROLES,
     missed: (id) => S.cache.get(id).segs.filter((s) => s.cls === 'first' && s.ratePct < 80).length,

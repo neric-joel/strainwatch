@@ -1,1 +1,1 @@
-{"reference":[]}
+{"reference":[],"gps":[{"name":"TXLU","lon":-101.8428,"lat":33.5354,"gps":1.39,"radar":0.5,"note":"GPS vertical rate over 9.7 years of the radar period; radar converted from line of sight (approximate)."},{"name":"TXLB","lon":-101.8784,"lat":33.5204,"gps":1.14,"radar":-0.42,"note":"GPS vertical rate over 9.7 years of the radar period; radar converted from line of sight (approximate)."}]}

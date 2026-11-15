@@ -1,1 +1,1 @@
-{"reference":[]}
+{"reference":[],"gps":[{"name":"SPKN","lon":-117.5026,"lat":47.6277,"gps":-4.03,"radar":-0.44,"note":"GPS vertical rate over 5.3 years of the radar period; radar converted from line of sight (approximate)."},{"name":"WASK","lon":-117.4206,"lat":47.6657,"gps":51.16,"radar":-1.17,"note":"GPS vertical rate over 5.3 years of the radar period; radar converted from line of sight (approximate)."}]}

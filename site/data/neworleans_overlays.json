@@ -1,1 +1,1 @@
-{"reference":[]}
+{"reference":[],"gps":[{"name":"LHJI","lon":-90.1624,"lat":30.0082,"gps":0.0,"radar":-2.28,"note":"GPS vertical rate over 9.6 years of the radar period; radar converted from line of sight (approximate)."},{"name":"INRI","lon":-90.1189,"lat":29.937,"gps":-0.98,"radar":-0.99,"note":"GPS vertical rate over 6.8 years of the radar period; radar converted from line of sight (approximate)."}]}

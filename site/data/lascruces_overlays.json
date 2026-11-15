@@ -1,1 +1,1 @@
-{"reference":[]}
+{"reference":[],"gps":[{"name":"NMSU","lon":-106.7447,"lat":32.2743,"gps":-0.66,"radar":0.55,"note":"GPS vertical rate over 9.8 years of the radar period; radar converted from line of sight (approximate)."},{"name":"NMLC","lon":-106.7551,"lat":32.28,"gps":-0.24,"radar":0.93,"note":"GPS vertical rate over 9.8 years of the radar period; radar converted from line of sight (approximate)."}]}

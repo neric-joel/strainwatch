@@ -1,1 +1,1 @@
-{"reference":[]}
+{"reference":[],"gps":[{"name":"ORL1","lon":-81.3825,"lat":28.4346,"gps":-0.5,"radar":-0.02,"note":"GPS vertical rate over 8.6 years of the radar period; radar converted from line of sight (approximate)."},{"name":"FLOL","lon":-81.4237,"lat":28.571,"gps":-0.38,"radar":-0.82,"note":"GPS vertical rate over 4.2 years of the radar period; radar converted from line of sight (approximate)."}]}

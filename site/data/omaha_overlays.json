@@ -1,1 +1,1 @@
-{"reference":[]}
+{"reference":[],"gps":[{"name":"IACB","lon":-95.8532,"lat":41.224,"gps":-0.85,"radar":-0.1,"note":"GPS vertical rate over 9.1 years of the radar period; radar converted from line of sight (approximate)."},{"name":"NEOM","lon":-96.0804,"lat":41.2156,"gps":-2.86,"radar":-0.43,"note":"GPS vertical rate over 9.1 years of the radar period; radar converted from line of sight (approximate)."}]}
